@@ -1,0 +1,16 @@
+G4WT0 > --------------------End of Local Run------------------------
+G4WT0 >  Run terminated.
+G4WT0 > Run Summary
+G4WT0 >   Number of events processed : 126
+G4WT0 >   User=40.100000s Real=41.000000s Sys=0.050000s [Cpu=97.9%]
+G4WT0 >  Edep in absorber 1 = 999.0 MeV
+G4WT3 >  Run terminated.
+G4WT3 > Run Summary
+G4WT3 >   Number of events processed : 125
+G4WT3 >   User=40.000000s Real=41.100000s Sys=0.040000s [Cpu=97.4%]
+--------------------End of Global Run-----------------------
+ Run terminated.
+Run Summary
+  Number of events processed : 1000
+  User=322.500000s Real=41.234567s Sys=0.750000s [Cpu=783.9%]
+ Edep in absorber 1 = 123.45 MeV

@@ -1,0 +1,12 @@
+2026-11-23T21:39:21+00:00
+scaling_governor:      96 performance 
+scaling_min_freq:      96 4500000 
+scaling_max_freq:      96 4500000 
+boost: 1
+THP: [always] madvise never
+2026-11-24T05:23:37+00:00
+scaling_governor:      96 performance 
+scaling_min_freq:      96 4500000 
+scaling_max_freq:      96 4500000 
+boost: 1
+THP: [always] madvise never

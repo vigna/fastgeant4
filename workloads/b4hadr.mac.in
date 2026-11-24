@@ -1,0 +1,10 @@
+# Hadronic shower: 10 GeV pi- in the B4 Pb/LAr calorimeter, FTFP_BERT.
+/control/verbose 0
+/run/verbose 1
+/control/cout/ignoreThreadsExcept 0
+/run/initialize
+/gun/particle pi-
+/gun/energy 10 GeV
+/random/setSeeds @SEED1@ @SEED2@
+/run/printProgress 0
+/run/beamOn @EVENTS@

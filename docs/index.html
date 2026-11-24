@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Geant4 PRNG speed study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE work: a technical write-up for Geant4 and PRNG people; conclusion first, every caveat kept
+   IDEA a survey map's legend sheet: the measured terrain drawn once, large, with a legend panel of key figures
+   PICTURE grouped bars of speedup over stock per workload and engine, one thread beside 96 threads, 95% intervals
+   COLOUR land ground, deep ink, a sea band for the header, contour brown for rules; series from the validated palette
+   TYPE Overpass 800 for titles and figures, Overpass for text
+   LAYOUT title and finding across the top with the legend panel at right; two chart panels side by side; stacked under 900px */
+:root{color-scheme:light dark;--bg:light-dark(#fbfbf2,#0d1c24);--ink:light-dark(#13242e,#e6edef);--mut:light-dark(#4f5e65,#a7b6bc);--sea:light-dark(#bfe3ee,#12313d);--rule:light-dark(#a8551b,#d39060);--line:light-dark(#dcdfd2,#24404c);--card:light-dark(#ffffff,#112833);
+--s1:light-dark(#2a78d6,#3987e5);--s2:light-dark(#eb6834,#d95926);--s3:light-dark(#1baf7a,#199e70)}
+:root[data-theme=light]{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:64px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Overpass,"Segoe UI",system-ui,sans-serif;overflow-x:clip}
+.band{padding:clamp(28px,4vw,56px) max(5vw,16px)}
+.wrap{max-width:1240px;margin:0 auto}
+h1,h2,h3{font-weight:800;letter-spacing:-.02em;line-height:1.08;text-wrap:balance;margin:0}
+h1{font-size:clamp(32px,4.4vw,50px)}
+h2{font-size:clamp(24px,2.6vw,30px);margin:0 0 14px;padding-top:14px;border-top:2px solid var(--rule)}
+h3{font-size:19px;margin:0 0 8px}
+p{max-width:70ch;margin:0 0 14px}
+a{color:inherit}
+code{font-size:.92em;overflow-wrap:anywhere}
+.head{background:var(--sea)}
+.top{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:clamp(20px,4vw,56px);align-items:start}
+.deck{font-size:17px;margin-top:16px}
+.scope{font-size:15px;color:var(--mut);margin-top:10px}
+.by{font-size:16px;margin:12px 0 0;font-weight:600}
+.by span{font-weight:400;color:var(--mut)}
+.legend{background:var(--card);border:1px solid var(--line);padding:18px 20px;display:grid;gap:12px}
+.kf b{display:block;font-weight:800;font-size:clamp(24px,2.6vw,30px);line-height:1.15;white-space:nowrap;font-variant-numeric:tabular-nums}
+.kf span{display:block;font-size:14px;line-height:1.4;color:var(--mut)}
+.toc{display:flex;gap:18px;margin-top:22px;font-size:14px;overflow-x:auto;padding-bottom:4px}
+.toc a{flex:none;text-decoration:none;border-bottom:1px solid var(--rule)}
+.keys{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:14px;margin:10px 0 18px}
+.keys i{display:inline-block;width:14px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.hatch{background-image:repeating-linear-gradient(135deg,transparent 0 3px,var(--bg) 3px 5px)}
+.panels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(20px,3vw,44px)}
+.pan h3 span{font-weight:400;color:var(--mut);font-size:14px}
+.ax,.row{display:grid;grid-template-columns:7.2em minmax(0,1fr) 3.4em;gap:8px;align-items:center}
+.ax{font-size:13px;color:var(--mut);height:22px}
+.ax .trk{height:22px}
+.ax .trk s{position:absolute;top:2px;transform:translateX(-50%);text-decoration:none;white-space:nowrap}
+.grp{margin-top:12px}
+.gname{font-weight:600;font-size:15px}
+.gname span{font-weight:400;color:var(--mut);font-size:13px}
+.row{height:21px;font-size:13px;cursor:default;outline-offset:2px}
+.row:hover,.row:focus{background:color-mix(in srgb,var(--sea) 45%,transparent)}
+.lab{color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.val{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.trk{position:relative;height:21px}
+.trk u{position:absolute;top:0;bottom:0;width:1px;background:var(--line)}
+.trk u.z{background:var(--ink);opacity:.55}
+.bar{position:absolute;top:4px;height:13px}
+.ci{position:absolute;top:10px;height:1.5px;background:var(--ink);opacity:.75}
+.note{font-size:14px;color:var(--mut);max-width:none}
+.tip{position:fixed;z-index:5;pointer-events:none;background:var(--card);color:var(--ink);border:1px solid var(--line);padding:6px 9px;font-size:13px;display:none;max-width:280px;box-shadow:0 2px 8px #0002}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(20px,3vw,44px);margin:8px 0 22px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+caption{text-align:left;font-weight:600;padding-bottom:6px;font-size:15px}
+th,td{padding:5px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{font-weight:600;color:var(--mut);border-bottom:1.5px solid var(--ink)}
+td small{color:var(--mut);font-size:12px}
+td.ns{color:var(--mut)}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px clamp(20px,3vw,44px)}
+ul{padding-left:1.2em;margin:0 0 14px}
+li{margin:0 0 8px;max-width:75ch}
+details{border-top:1px solid var(--line);padding:10px 0}
+summary{cursor:pointer;font-weight:600}
+details li{font-size:14px}
+.foot{font-size:14px;color:var(--mut)}
+@media(max-width:900px){.top,.panels,.two,.cols{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){.legend{grid-template-columns:repeat(2,minmax(0,1fr));padding:14px}.kf span{font-size:13px}table{font-size:13px}th,td{padding:5px 3px}.ax,.row{grid-template-columns:5.6em minmax(0,1fr) 3em;gap:6px}}
+@media(prefers-reduced-motion:no-preference){.bar{transition:opacity .2s}.pan:hover .row:not(:hover) .bar{opacity:.55}}
+</style>
+</head>
+<body>
+<header class="band head">
+<div class="wrap top">
+<div>
+<h1>Replacing MIXMAX speeds up Geant4 by 2–9% on one thread and 3–14% on 96</h1>
+<p class="by">Sebastiano Vigna <span>Università degli Studi di Milano</span></p>
+<p class="deck">Geant4 11.4.3, five workloads, on a 96-core AMD Zen 5 server (clock fixed at 4.5 GHz). With MWC192X called through an inlined, non-virtual path, every workload runs faster than stock; xoshiro256++ follows, up to two points behind (four on testem11 with 96 threads, where its jump costs most). The physics is unchanged: every observable agrees across engines, and the same engine and seed give identical results in every build.</p>
+<p class="deck scope">Only generators that produce a number in 1–2 ns and support jumping are considered, so that, as with MIXMAX, distinct seeds give non-overlapping streams: MWC192X and xoshiro256++. The author designed MWC192X and co-designed xoshiro256++.</p>
+<nav class="toc"><a href="#sources">Two sources of gain</a><a href="#totals">All engines</a><a href="#cost">Where the time goes</a><a href="#code">Code</a><a href="#checks">Checks and caveats</a></nav>
+</div>
+<aside class="legend" aria-label="Key figures">
+<div class="kf"><b id="k1"></b><span>96 threads: MWC192X on the fast path vs stock, over the five workloads</span></div>
+<div class="kf"><b id="k2"></b><span>one thread, same comparison</span></div>
+<div class="kf"><b id="k3"></b><span>engine swap alone, one thread (drop-in MWC192X vs drop-in MIXMAX, same binary)</span></div>
+<div class="kf"><b id="k4"></b><span>reseeding, done for every event in multithreaded runs: MIXMAX vs MWC192X</span></div>
+</aside>
+</div>
+</header>
+
+<section class="band">
+<div class="wrap">
+<h2 style="border:0;padding:0">Fast path against stock Geant4, by workload and engine</h2>
+<div class="keys" id="keys"></div>
+<div class="panels" id="chart"></div>
+<p class="note" style="margin-top:14px">Speedup is 1/ratio − 1 of event-loop time per event, geometric mean of runs paired by repetition (22 for one thread, run in 11 parallel single-core slots; 10 for 96 threads). Lines are 95% Student-t intervals on log ratios. Hatched bars are not significant: the interval reaches zero, or, as for every comparison between two binaries, the code-layout band measured between relinks of the same code. Hover or focus a bar for its interval; the tables below give every number.</p>
+</div>
+</section>
+
+<section class="band" id="sources">
+<div class="wrap">
+<h2>The gain has two sources, and they add up</h2>
+<div class="cols">
+<p><b>The engine.</b> Swapping the engine behind Geant4's existing call (drop-in, chosen at run time, same binary) saves the generator's own cost: cheaper draws and, in multithreaded runs, a far cheaper reseed. Geant4 reseeds each worker's engine at the start of every event; MIXMAX takes 23 µs to do it on this machine, xoshiro256++ 6.6 µs, MWC192X 0.5 µs. That is why testem11, whose events are short, gains 12% on 96 threads but 2% on one thread, where it reseeds once per run.</p>
+<p><b>The call path.</b> Stock <code>G4UniformRand()</code> calls the out-of-line <code>HepRandom::getTheEngine()</code> through the PLT, then the virtual <code>flat()</code>. The fast path reads a thread-local pointer and calls the engine class chosen at build time directly, inlined. It helps every engine, MIXMAX included: up to 6% on opnovice2, which draws 160 000 numbers per event, nearly all through <code>G4UniformRand()</code>.</p>
+</div>
+<div class="two" id="t-dropin"></div>
+<div class="two" id="t-call"></div>
+</div>
+</section>
+
+<section class="band" id="totals">
+<div class="wrap">
+<h2>All engines on the fast path, against stock</h2>
+<p>The same numbers as the chart. MIXMAX here is the fast path alone, with the stock engine. MWC192X is fastest on every workload (on b4hadr its interval overlaps xoshiro256++'s). xoshiro256++ follows, and pays for its 6.6 µs jump on testem11's 96-thread runs.</p>
+<div class="two" id="t-total"></div>
+<div class="two" id="t-noise"></div>
+</div>
+</section>
+
+<section class="band" id="cost">
+<div class="wrap">
+<h2>Where the time goes</h2>
+<div class="cols">
+<p>The microbenchmark below times one call in a tight loop on one core. That loop runs at 5–7 instructions per cycle and overlaps successive calls, so its time per call understates what a draw costs inside a simulation. Hardware counters on the real workloads agree with it on the instructions saved, not on the cycles: in situ, drop-in MWC192X saves about 8 cycles per draw over MIXMAX, where the loop shows no saving at all. The measured gains therefore exceed predictions computed from draw counts and the microbenchmark.</p>
+<p>Reseeding is the exception: it is a long, serial computation whose cost the microbenchmark measures faithfully. With 96 threads a testem11 event takes about 264 µs of thread time, so MIXMAX's 23 µs reseed is about 9% of it, which the cheap-seeding engines save almost entirely. Both engines are seeded by jumping, so distinct seeds give non-overlapping streams, as with MIXMAX.</p>
+</div>
+<div class="scroll" id="t-bench"></div>
+<div id="t-perf" style="margin-top:22px"></div>
+<p class="note">Counters per draw against drop-in MIXMAX, user space, mean of 4 full runs; draws per event from counted runs. Same-engine configurations run identical events, so their instruction differences are exact.</p>
+</div>
+</section>
+
+
+<section class="band" id="code">
+<div class="wrap">
+<h2>The change to Geant4 is small</h2>
+<div class="cols">
+<div class="scroll"><table>
+<caption>Edits to existing Geant4 files</caption>
+<thead><tr><th>File</th><th>Lines</th></tr></thead>
+<tbody>
+<tr><td><code>clhep/src/Random.cc</code></td><td>+48 −2</td></tr>
+<tr><td><code>clhep/…/Random.h</code></td><td>+8</td></tr>
+<tr><td><code>global/…/Randomize.hh</code></td><td>+5</td></tr>
+<tr><td><code>G4UserWorkerThreadInitialization.cc</code></td><td>+6 −2</td></tr>
+<tr><td><code>G4UserTaskThreadInitialization.cc</code></td><td>+6 −2</td></tr>
+<tr><td>CLHEP <code>CMakeLists.txt</code></td><td>+8</td></tr>
+</tbody></table></div>
+<div class="scroll"><table>
+<caption>New files (code lines, without comments)</caption>
+<thead><tr><th>File</th><th>Lines</th></tr></thead>
+<tbody>
+<tr><td><code>G4RngFast.h</code>: the fast path</td><td>21</td></tr>
+<tr><td><code>G4RngSelect.h/.cc</code>: engine by environment, worker cloning</td><td>88</td></tr>
+<tr><td><code>G4RngCountingEngine.h/.cc</code>: draw counting</td><td>91</td></tr>
+<tr><td><code>G4RngEngines.h/.cc</code>, jump tables: the generators</td><td>419</td></tr>
+</tbody></table></div>
+</div>
+<p>A production change needs much less than the study did. Geant4 already accepts any engine through <code>G4Random::setTheEngine</code>; the one gap for the drop-in is that worker threads clone the master's engine from a hard-coded list of engine types, a few lines in each of the two thread-initialization files. The fast path adds about 50 lines: <code>G4RngFast.h</code>, two thread-local pointers kept current in <code>Random.cc</code>, and the <code>G4UniformRand()</code> macro. Selection by environment variable, draw counting and the debug hooks are study scaffolding.</p>
+</div>
+</section>
+
+<section class="band" id="checks">
+<div class="wrap">
+<h2>Checks, and what to keep in mind</h2>
+<ul>
+<li><b>Physics.</b> Each campaign compares every observable of every workload across engines (Welch t, family-wise α = 1% by Bonferroni over the distinct comparisons). All passed; the smallest p was 0.016 (testem3 charged steps, xoshiro256++) against a threshold of 0.00038. The same engine, seed and repetition gave bit-identical observables in every build: 660 runs compared on one thread, 300 on 96 threads.</li>
+<li><b>Code layout.</b> A comparison between two binaries is called significant only if its interval clears the layout band, the spread measured between two relinks of identical code (0.4–2.1% here). The drop-in <code>getTheEngine()</code> hot path is checked to be instruction-identical to stock, with the same 1019 call sites.</li>
+<li><b>Stock vs drop-in MIXMAX</b> should be zero and is, within the band, on four workloads. On opnovice2 stock is 2.1% faster on one thread and 1.0% on 96, just beyond the band. The likely cause is code placement in <code>libG4clhep</code>, the only library that differs on one thread. It makes the opnovice2 figures against stock 1–2 points lower than those against drop-in MIXMAX.</li>
+<li><b>Parallel slots.</b> Eleven single-thread runs side by side slow each other by 0.4–0.5% (interval upper ends below 1.01, spread below 1%), equally for every configuration; the 96-thread runs ran alone.</li>
+<li><b>The multithreaded timer</b> includes worker run initialization, the same for every engine, which dilutes the 96-thread ratios slightly.</li>
+</ul>
+</div>
+</section>
+
+<footer class="band foot"><div class="wrap"><p style="max-width:none">Geant4 11.4.3 on a 96-core AMD Zen 5 server (clock fixed at 4.5 GHz, GCC 16.2), November 2026. Code, patches and raw data: <a href="https://github.com/vigna/fastgeant4">github.com/vigna/fastgeant4</a>.</p></div></footer>
+
+<div class="tip" id="tip" role="tooltip"></div>
+<script>
+{
+const D={"res":{"st":{"total":{"testem3":{"mwc192x":[4.36,4.0,4.72,false],"xoshiro256pp":[3.61,2.86,4.36,false],"mixmax":[3.12,2.72,3.52,false]},"b4hadr":{"mwc192x":[2.81,2.05,3.57,false],"xoshiro256pp":[2.57,1.74,3.42,false],"mixmax":[1.33,1.19,1.47,false]},"testem11":{"mwc192x":[3.81,3.57,4.06,false],"xoshiro256pp":[2.71,2.0,3.42,true],"mixmax":[1.84,1.63,2.06,true]},"opnovice2":{"mwc192x":[8.84,8.46,9.21,false],"xoshiro256pp":[6.8,5.78,7.83,false],"mixmax":[3.87,3.46,4.29,false]},"range":{"mwc192x":[2.02,1.81,2.22,false],"xoshiro256pp":[1.03,0.76,1.29,true],"mixmax":[-0.19,-0.51,0.14,true]}},"dropin":{"testem3":{"mwc192x":[2.03,1.7,2.37,false],"xoshiro256pp":[2.02,1.7,2.34,false]},"b4hadr":{"mwc192x":[1.63,0.91,2.35,false],"xoshiro256pp":[2.08,1.33,2.85,false]},"testem11":{"mwc192x":[2.21,1.93,2.49,false],"xoshiro256pp":[1.19,0.74,1.63,false]},"opnovice2":{"mwc192x":[3.64,3.05,4.24,false],"xoshiro256pp":[2.94,2.11,3.77,false]},"range":{"mwc192x":[1.47,1.22,1.72,false],"xoshiro256pp":[1.18,0.92,1.44,false]}},"callpath":{"testem3":{"mwc192x":[1.71,1.49,1.93,false],"xoshiro256pp":[0.98,0.28,1.69,true],"mixmax":[2.54,2.32,2.77,false]},"b4hadr":{"mwc192x":[1.43,1.28,1.59,false],"xoshiro256pp":[0.75,0.53,0.97,true],"mixmax":[1.6,1.44,1.77,false]},"testem11":{"mwc192x":[3.31,3.04,3.58,false],"xoshiro256pp":[3.24,2.61,3.87,false],"mixmax":[3.59,3.32,3.85,false]},"opnovice2":{"mwc192x":[7.24,6.93,7.56,false],"xoshiro256pp":[5.96,5.58,6.34,false],"mixmax":[6.08,5.79,6.38,false]},"range":{"mwc192x":[1.45,1.24,1.66,false],"xoshiro256pp":[0.75,0.48,1.01,true],"mixmax":[0.71,0.36,1.06,true]}},"noise":{"testem3":{"ms":"24","cv":"0.65%","band":"1.11%","reps":"22","stock":[-0.56,-0.9,-0.22,true]},"b4hadr":{"ms":"4.549","cv":"1.25%","band":"0.92%","reps":"22","stock":[0.27,0.16,0.38,true]},"testem11":{"ms":"0.1744","cv":"0.41%","band":"2.13%","reps":"22","stock":[1.71,1.47,1.95,true]},"opnovice2":{"ms":"7.194","cv":"0.93%","band":"1.20%","reps":"22","stock":[2.13,1.66,2.59,false]},"range":{"ms":"0.6638","cv":"0.47%","band":"1.11%","reps":"22","stock":[0.9,0.64,1.16,true]}}},"mt":{"total":{"testem3":{"mwc192x":[3.65,3.32,3.99,false],"xoshiro256pp":[2.93,2.02,3.84,false],"mixmax":[2.32,2.02,2.62,false]},"b4hadr":{"mwc192x":[2.94,2.5,3.37,false],"xoshiro256pp":[2.51,2.01,3.01,false],"mixmax":[1.46,1.22,1.69,false]},"testem11":{"mwc192x":[13.91,13.5,14.32,false],"xoshiro256pp":[9.57,8.75,10.4,false],"mixmax":[1.54,1.17,1.91,false]},"opnovice2":{"mwc192x":[8.47,8.17,8.77,false],"xoshiro256pp":[6.72,6.28,7.17,false],"mixmax":[4.36,4.15,4.56,false]},"range":{"mwc192x":[4.7,4.3,5.09,false],"xoshiro256pp":[3.64,3.27,4.0,false],"mixmax":[0.49,0.33,0.65,true]}},"dropin":{"testem3":{"mwc192x":[1.48,1.34,1.63,false],"xoshiro256pp":[1.39,1.1,1.67,false]},"b4hadr":{"mwc192x":[1.89,1.56,2.21,false],"xoshiro256pp":[1.65,1.25,2.04,false]},"testem11":{"mwc192x":[11.52,10.96,12.07,false],"xoshiro256pp":[8.02,7.47,8.56,false]},"opnovice2":{"mwc192x":[2.78,2.46,3.11,false],"xoshiro256pp":[2.38,2.05,2.72,false]},"range":{"mwc192x":[3.57,3.25,3.89,false],"xoshiro256pp":[2.68,2.39,2.97,false]}},"callpath":{"testem3":{"mwc192x":[1.61,1.41,1.81,false],"xoshiro256pp":[0.99,-0.02,2.01,true],"mixmax":[1.79,1.59,1.98,false]},"b4hadr":{"mwc192x":[1.07,0.85,1.29,false],"xoshiro256pp":[0.89,0.62,1.16,false],"mixmax":[1.5,1.2,1.8,false]},"testem11":{"mwc192x":[2.74,2.3,3.18,false],"xoshiro256pp":[2.03,1.35,2.71,false],"mixmax":[2.13,1.79,2.47,false]},"opnovice2":{"mwc192x":[6.62,6.37,6.87,false],"xoshiro256pp":[5.31,4.93,5.69,false],"mixmax":[5.43,5.23,5.63,false]},"range":{"mwc192x":[1.22,0.78,1.65,false],"xoshiro256pp":[1.07,0.84,1.29,false],"mixmax":[0.61,0.43,0.8,true]}},"noise":{"testem3":{"ms":"0.4064","cv":"0.37%","band":"0.56%","reps":"10","stock":[-0.52,-0.84,-0.2,true]},"b4hadr":{"ms":"0.06705","cv":"0.55%","band":"0.39%","reps":"10","stock":[0.04,-0.17,0.26,true]},"testem11":{"ms":"0.00275","cv":"0.56%","band":"0.85%","reps":"10","stock":[0.58,0.17,0.99,true]},"opnovice2":{"ms":"0.1135","cv":"0.44%","band":"0.55%","reps":"10","stock":[1.03,0.86,1.2,false]},"range":{"ms":"0.01042","cv":"0.28%","band":"0.75%","reps":"10","stock":[0.13,-0.07,0.33,true]}}}},"bench":[{"e":"mwc192x","reseed":500.8054,"nsDrop":2.4572,"nsFast":0.8408,"insDrop":45.0,"cycDrop":12.0,"insFast":23.0,"cycFast":3.748},{"e":"xoshiro256pp","reseed":6584.5555,"nsDrop":2.459,"nsFast":1.1081,"insDrop":55.0,"cycDrop":12.0,"insFast":34.0,"cycFast":4.961},{"e":"mixmax","reseed":23238.5928,"nsDrop":2.3643,"nsFast":1.4081,"insDrop":57.062,"cycDrop":10.56,"insFast":40.062,"cycFast":6.323}],"perf":{"res":{"opnovice2":{"dropin mixmax":{"cyc":0.0,"ins":0.0,"bm":0.0},"dropin mwc192x":{"cyc":-8.18,"ins":-12.48,"bm":-0.06},"dropin xoshiro256pp":{"cyc":-7.87,"ins":-2.12,"bm":-0.07},"fast-mixmax mixmax":{"cyc":-11.3,"ins":-17.82,"bm":-0.01},"stock mixmax":{"cyc":-1.14,"ins":0.1,"bm":0.01}},"testem3":{"dropin mixmax":{"cyc":0.0,"ins":0.0,"bm":0.0},"dropin mwc192x":{"cyc":-8.11,"ins":-13.98,"bm":-0.11},"dropin xoshiro256pp":{"cyc":-8.49,"ins":-8.3,"bm":-0.11},"fast-mixmax mixmax":{"cyc":-9.99,"ins":-9.99,"bm":-0.01},"stock mixmax":{"cyc":-2.47,"ins":-0.0,"bm":0.01}}}}};
+const ENG=["mwc192x","xoshiro256pp","mixmax"];
+const NAME={mwc192x:"MWC192X",xoshiro256pp:"xoshiro256++",mixmax:"MIXMAX"};
+const WL=["testem3","b4hadr","testem11","opnovice2","range"];
+const DESC={testem3:"EM shower, Cu/LAr calorimeter",b4hadr:"10 GeV π−, B4 calorimeter",testem11:"protons in water",opnovice2:"optical photons in BGO",range:"10 keV e−, Geant4-DNA"};
+const COL={mwc192x:"--s1",xoshiro256pp:"--s2",mixmax:"--s3"};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+const sg=(v,d=1)=>(v>0?"+":v<0?"−":"")+Math.abs(v).toFixed(d);
+const range=(o,e)=>{const v=WL.map(w=>o[w][e][0]);return [Math.min(...v),Math.max(...v)]};
+const r1=range(D.res.mt.total,"mwc192x"),r2=range(D.res.st.total,"mwc192x"),r3=range(D.res.st.dropin,"mwc192x");
+const mix=D.bench.find(b=>b.e==="mixmax"),mwc=D.bench.find(b=>b.e==="mwc192x");
+document.getElementById("k1").textContent=`+${Math.round(r1[0])}–${Math.round(r1[1])}%`;
+document.getElementById("k2").textContent=`+${Math.round(r2[0])}–${Math.round(r2[1])}%`;
+document.getElementById("k3").textContent=`+${r3[0].toFixed(1)}–${r3[1].toFixed(1)}%`;
+document.getElementById("k4").textContent=`${(mix.reseed/1000).toFixed(0)} → ${(mwc.reseed/1000).toFixed(1)} µs`;
+
+document.getElementById("keys").innerHTML=ENG.map(e=>`<span><i style="background:var(${COL[e]})"></i>${NAME[e]}${e==="mixmax"?" (fast path only)":""}</span>`).join("")+
+ `<span><i class="hatch" style="background-color:var(--mut)"></i>not significant</span><span><i style="height:2px;background:var(--ink);vertical-align:3px"></i>95% interval</span>`;
+
+const LO=-4,HI=16,X=v=>(Math.max(LO,Math.min(HI,v))-LO)/(HI-LO)*100,TICKS=[0,5,10,15];
+const grid=TICKS.map(t=>`<u class="${t===0?"z":""}" style="left:${X(t)}%"></u>`).join("");
+const panel=(mode,title,sub)=>{
+  const T=D.res[mode].total;
+  return `<div class="pan"><h3>${title} <span>${sub}</span></h3>
+  <div class="ax"><span></span><span class="trk">${TICKS.map(t=>`<s style="left:${X(t)}%">${t===0?"0":"+"+t+"%"}</s>`).join("")}</span><span></span></div>`+
+  WL.map(w=>`<div class="grp"><div class="gname">${w} <span>${DESC[w]}</span></div>`+ENG.map(e=>{
+    const [v,lo,hi,ns]=T[w][e],a=X(Math.min(0,v)),b=X(Math.max(0,v));
+    const rad=v>=0?"0 4px 4px 0":"4px 0 0 4px";
+    const tip=`${NAME[e]}${e==="mixmax"?" (fast path only)":""}, ${w}, ${title.toLowerCase()}: ${sg(v,2)}% [${sg(lo,2)}, ${sg(hi,2)}]${ns?", not significant":""}`;
+    return `<div class="row" tabindex="0" data-tip="${esc(tip)}"><span class="lab">${NAME[e]}</span><span class="trk">${grid}<i class="bar${ns?" hatch":""}" style="left:${a}%;width:${b-a}%;background-color:var(${COL[e]});border-radius:${rad}"></i><b class="ci" style="left:${X(lo)}%;width:${X(hi)-X(lo)}%"></b></span><span class="val">${sg(v)}</span></div>`;
+  }).join("")+`</div>`).join("")+`</div>`;
+};
+document.getElementById("chart").innerHTML=panel("st","One thread","22 paired runs")+panel("mt","96 threads","10 paired runs");
+
+const tip=document.getElementById("tip");
+const show=(el,x,y)=>{tip.textContent=el.dataset.tip;tip.style.display="block";const w=tip.offsetWidth,h=tip.offsetHeight;tip.style.left=Math.max(8,Math.min(innerWidth-w-8,x+12))+"px";tip.style.top=Math.max(8,y-h-10)+"px"};
+const chart=document.getElementById("chart");
+chart.addEventListener("pointermove",ev=>{const r=ev.target.closest(".row");r?show(r,ev.clientX,ev.clientY):tip.style.display="none"});
+chart.addEventListener("pointerleave",()=>{tip.style.display="none"});
+chart.addEventListener("focusin",ev=>{const r=ev.target.closest(".row");if(r){const b=r.getBoundingClientRect();show(r,b.left+b.width/2,b.top)}});
+chart.addEventListener("focusout",()=>{tip.style.display="none"});
+
+const cell=c=>c?`<td class="${c[3]?"ns":""}">${sg(c[0])}<small> ±${((c[2]-c[1])/2).toFixed(1)}${c[3]?" n.s.":""}</small></td>`:"<td>–</td>";
+const tab=(cap,o,engs,lab=e=>NAME[e])=>`<div class="scroll"><table><caption>${cap}</caption><thead><tr><th>Engine</th>${WL.map(w=>`<th>${w}</th>`).join("")}</tr></thead><tbody>`+
+  engs.map(e=>`<tr><td>${lab(e)}</td>${WL.map(w=>cell(o[w][e])).join("")}</tr>`).join("")+`</tbody></table></div>`;
+const NEWE=["mwc192x","xoshiro256pp"];
+const set=(id,h)=>{document.getElementById(id).innerHTML=h};
+set("t-dropin",tab("Engine swap alone, one thread: drop-in engine vs drop-in MIXMAX, %",D.res.st.dropin,NEWE)+tab("Engine swap alone, 96 threads, %",D.res.mt.dropin,NEWE));
+set("t-call",tab("Call path alone, one thread: fast path vs drop-in, same engine, %",D.res.st.callpath,ENG)+tab("Call path alone, 96 threads, %",D.res.mt.callpath,ENG));
+const fp=e=>NAME[e]+(e==="mixmax"?" (fast path only)":"");
+set("t-total",tab("Fast path vs stock, one thread, %",D.res.st.total,ENG,fp)+tab("Fast path vs stock, 96 threads, %",D.res.mt.total,ENG,fp));
+const nz=(cap,o)=>`<div class="scroll"><table><caption>${cap}</caption><thead><tr><th>Workload</th><th>ms/event</th><th>run CV</th><th>layout band</th><th>stock vs drop-in</th></tr></thead><tbody>`+
+  WL.map(w=>{const n=o[w];return `<tr><td>${w}</td><td>${esc(n.ms)}</td><td>${esc(n.cv)}</td><td>${esc(n.band)}</td>${cell(n.stock)}</tr>`}).join("")+`</tbody></table></div>`;
+set("t-noise",nz("Reference and noise, one thread (drop-in MIXMAX)",D.res.st.noise)+nz("Reference and noise, 96 threads (wall time per event)",D.res.mt.noise));
+
+const us=ns=>ns>=1000?`${(ns/1000).toFixed(ns>=10000?1:2)} µs`:`${ns.toFixed(ns<10?1:0)} ns`;
+set("t-bench",`<table><caption>Microbenchmark, one core: reseed and one <code>G4UniformRand()</code> call</caption><thead><tr><th>Engine</th><th>reseed</th><th>ns/call, stock path</th><th>ns/call, fast path</th><th>instructions, stock path</th><th>instructions, fast path</th><th>cycles, stock path</th><th>cycles, fast path</th></tr></thead><tbody>`+
+  D.bench.map(b=>`<tr><td>${NAME[b.e]}</td><td>${us(b.reseed)}</td><td>${b.nsDrop.toFixed(2)}</td><td>${b.nsFast.toFixed(2)}</td><td>${b.insDrop.toFixed(1)}</td><td>${b.insFast.toFixed(1)}</td><td>${b.cycDrop.toFixed(1)}</td><td>${b.cycFast.toFixed(1)}</td></tr>`).join("")+`</tbody></table>`);
+
+const PC=[["dropin mwc192x","drop-in MWC192X"],["dropin xoshiro256pp","drop-in xoshiro256++"],["fast-mixmax mixmax","fast MIXMAX"],["stock mixmax","stock MIXMAX"]];
+const pt=(h,lab)=>`<div class="scroll"><table><caption>${lab}: change per draw vs drop-in MIXMAX</caption><thead><tr><th>Configuration</th><th>cycles opn.</th><th>cycles tem3</th><th>instr. opn.</th><th>instr. tem3</th><th>br. miss opn.</th><th>br. miss tem3</th></tr></thead><tbody>`+
+  PC.map(([k,n])=>{const a=D.perf[h].opnovice2[k],b=D.perf[h].testem3[k];return `<tr><td>${n}</td><td>${sg(a.cyc,2)}</td><td>${sg(b.cyc,2)}</td><td>${sg(a.ins,1)}</td><td>${sg(b.ins,1)}</td><td>${sg(a.bm,2)}</td><td>${sg(b.bm,2)}</td></tr>`}).join("")+`</tbody></table></div>`;
+set("t-perf",pt("res","Hardware counters in situ"));
+
+}
+</script>
+</body>
+</html>

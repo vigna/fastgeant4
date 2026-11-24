@@ -1,0 +1,108 @@
+{
+  "testem3": {
+    "example": "extended/electromagnetic/TestEm3",
+    "exe": "TestEm3",
+    "macro": "testem3.mac.in",
+    "events_st": 1340,
+    "events_mt": 6100,
+    "events_warmup": 2,
+    "observables": [
+      {
+        "name": "n_gamma",
+        "regex": "^ Mean number of gamma\\s+([-+0-9.eE]+)"
+      },
+      {
+        "name": "n_charged_steps",
+        "regex": "^ Mean number of charged steps\\s+([-+0-9.eE]+)"
+      },
+      {
+        "name": "n_neutral_steps",
+        "regex": "^ Mean number of neutral steps\\s+([-+0-9.eE]+)"
+      }
+    ]
+  },
+  "b4hadr": {
+    "example": "basic/B4/B4a",
+    "exe": "exampleB4a",
+    "macro": "b4hadr.mac.in",
+    "args": [
+      "-m",
+      "@MACRO@"
+    ],
+    "events_st": 7300,
+    "events_mt": 37000,
+    "events_warmup": 2,
+    "observables": [
+      {
+        "name": "eabs_MeV",
+        "regex": "^ EAbs : mean = ([-+0-9.eE]+) (\\w+)"
+      },
+      {
+        "name": "egap_MeV",
+        "regex": "^ EGap : mean = ([-+0-9.eE]+) (\\w+)"
+      },
+      {
+        "name": "labs_mm",
+        "regex": "^ LAbs : mean = ([-+0-9.eE]+) (\\w+)"
+      }
+    ]
+  },
+  "testem11": {
+    "example": "extended/electromagnetic/TestEm11",
+    "exe": "TestEm11",
+    "macro": "testem11.mac.in",
+    "events_st": 193000,
+    "events_mt": 920000,
+    "events_warmup": 2,
+    "observables": [
+      {
+        "name": "track_len_mm",
+        "regex": "^ Track length of primary track = ([-+0-9.eE]+) (\\w+)"
+      },
+      {
+        "name": "proj_range_mm",
+        "regex": "^ Projected range\\s+= ([-+0-9.eE]+) (\\w+)"
+      },
+      {
+        "name": "n_steps",
+        "regex": "^ Nb of steps of primary track\\s+= ([-+0-9.eE]+)"
+      }
+    ]
+  },
+  "opnovice2": {
+    "example": "extended/optical/OpNovice2",
+    "exe": "OpNovice2",
+    "macro": "opnovice2.mac.in",
+    "events_st": 4400,
+    "events_mt": 23000,
+    "events_warmup": 2,
+    "observables": [
+      {
+        "name": "n_scint",
+        "regex": "^Average number of scintillation photons created per event: ([-+0-9.eE]+)"
+      },
+      {
+        "name": "n_cerenkov",
+        "regex": "^Average number of Cerenkov photons created per event: ([-+0-9.eE]+)"
+      }
+    ]
+  },
+  "range": {
+    "example": "extended/medical/dna/range",
+    "exe": "range",
+    "macro": "range.mac.in",
+    "events_st": 50000,
+    "events_mt": 250000,
+    "events_warmup": 2,
+    "observables": [
+      {
+        "name": "track_len_mm",
+        "regex": "^ Track length of primary track = ([-+0-9.eE]+) (\\w+)"
+      },
+      {
+        "name": "proj_range_mm",
+        "regex": "^ Projected range\\s+= ([-+0-9.eE]+) (\\w+)"
+      }
+    ]
+  }
+}

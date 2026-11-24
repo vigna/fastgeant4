@@ -1,0 +1,28 @@
+diff -ruN a/examples/extended/electromagnetic/TestEm11/TestEm11.cc b/examples/extended/electromagnetic/TestEm11/TestEm11.cc
+--- a/examples/extended/electromagnetic/TestEm11/TestEm11.cc	2026-10-01 08:43:14.000000000 +0200
++++ b/examples/extended/electromagnetic/TestEm11/TestEm11.cc	2026-11-22 19:13:27.410416402 +0100
+@@ -46,8 +46,8 @@
+   G4UIExecutive* ui = nullptr;
+   if (argc == 1) ui = new G4UIExecutive(argc, argv);
+ 
+-  // choose the Random engine
+-  G4Random::setTheEngine(new CLHEP::RanecuEngine);
++  // G4RNG study: keep the default engine (the stock example sets RanecuEngine).
++  // G4Random::setTheEngine(new CLHEP::RanecuEngine);
+ 
+   // Use SteppingVerbose with Unit
+   G4int precision = 4;
+diff -ruN a/examples/extended/optical/OpNovice2/src/Run.cc b/examples/extended/optical/OpNovice2/src/Run.cc
+--- a/examples/extended/optical/OpNovice2/src/Run.cc	2026-11-22 23:28:41.249105721 +0100
++++ b/examples/extended/optical/OpNovice2/src/Run.cc	2026-11-22 23:28:41.256494638 +0100
+@@ -206,7 +206,9 @@
+     (const DetectorConstruction*)(G4RunManager::GetRunManager()->GetUserDetectorConstruction());
+ 
+   std::ios::fmtflags mode = G4cout.flags();
+-  G4int prec = G4cout.precision(2);
++  // G4RNG study: full precision, so that the physics check can compare engines
++  // (the stock example prints 2 significant digits).
++  G4int prec = G4cout.precision(8);
+ 
+   G4cout << "\n    Run Summary\n";
+   G4cout << "---------------------------------\n";

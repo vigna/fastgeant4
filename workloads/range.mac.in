@@ -1,0 +1,14 @@
+# Track structure: 10 keV e- in water, Geant4-DNA physics (dna_opt2), DNA range example.
+/control/verbose 0
+/run/verbose 1
+/control/cout/ignoreThreadsExcept 0
+/range/det/setMat G4_WATER
+/range/det/setRadius 1 m
+/range/det/setTrackingCut 10 eV
+/range/phys/addPhysics dna_opt2
+/run/initialize
+/gun/particle e-
+/gun/energy 10 keV
+/random/setSeeds @SEED1@ @SEED2@
+/run/printProgress 0
+/run/beamOn @EVENTS@

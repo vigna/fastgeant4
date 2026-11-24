@@ -1,0 +1,16 @@
+# Proton therapy: 160 MeV protons in 20 cm of water (Bragg peak), TestEm11 EM physics.
+/control/verbose 0
+/run/verbose 1
+/control/cout/ignoreThreadsExcept 0
+/testem/det/setNbOfAbsor 1
+/testem/det/setAbsor 1 Water 20 cm
+/testem/det/setSizeYZ 20 cm
+/testem/phys/addPhysics local
+/run/setCut 100 um
+/run/initialize
+/testem/gun/setDefault
+/gun/particle proton
+/gun/energy 160 MeV
+/random/setSeeds @SEED1@ @SEED2@
+/run/printProgress 0
+/run/beamOn @EVENTS@

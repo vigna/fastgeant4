@@ -1,0 +1,6 @@
+### Run 0 starts.
+--------------------End of Global Run-----------------------
+ Run terminated.
+Run Summary
+  Number of events processed : 200
+  User=59.870000s Real=60.020000s Sys=0.100000s [Cpu=99.9%]

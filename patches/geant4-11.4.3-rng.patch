@@ -1,0 +1,230 @@
+diff -ruN a/source/externals/clhep/CMakeLists.txt b/source/externals/clhep/CMakeLists.txt
+--- a/source/externals/clhep/CMakeLists.txt	2026-10-01 08:43:14.000000000 +0200
++++ b/source/externals/clhep/CMakeLists.txt	2026-11-23 01:38:33.149449666 +0100
+@@ -17,6 +17,11 @@
+   include/CLHEP/Random/DualRand.h
+   include/CLHEP/Random/EngineFactory.h
+   include/CLHEP/Random/engineIDulong.h
++  include/CLHEP/Random/G4RngConfig.h
++  include/CLHEP/Random/G4RngCountingEngine.h
++  include/CLHEP/Random/G4RngEngines.h
++  include/CLHEP/Random/G4RngFast.h
++  include/CLHEP/Random/G4RngSelect.h
+   include/CLHEP/Random/JamesRandom.h
+   include/CLHEP/Random/mixmax_skip_N17.icc
+   include/CLHEP/Random/MixMaxRng.h
+@@ -130,6 +135,9 @@
+   src/LorentzVectorK.cc
+   src/LorentzVectorL.cc
+   src/LorentzVectorR.cc
++  src/G4RngCountingEngine.cc
++  src/G4RngEngines.cc
++  src/G4RngSelect.cc
+   src/MixMaxRng.cc
+   src/MTwistEngine.cc
+   src/NonRandomEngine.cc
+diff -ruN a/source/externals/clhep/include/CLHEP/Random/Random.h b/source/externals/clhep/include/CLHEP/Random/Random.h
+--- a/source/externals/clhep/include/CLHEP/Random/Random.h	2026-10-01 08:43:14.000000000 +0200
++++ b/source/externals/clhep/include/CLHEP/Random/Random.h	2026-11-23 01:38:33.150195169 +0100
+@@ -38,6 +38,7 @@
+ #define HepRandom_h 1
+ 
+ #include "CLHEP/Random/RandomEngine.h"
++#include "CLHEP/Random/G4RngConfig.h"
+ 
+ namespace CLHEP {
+ 
+@@ -115,7 +116,13 @@
+   static void setTheEngine (HepRandomEngine* theNewEngine);
+   // To set the underlying algorithm object.
+ 
++#ifdef G4RNG_FAST
++  // G4RNG fast path: inline, defined in G4RngFast.h.
++  static inline HepRandomEngine * getTheEngine();
++  static HepRandomEngine * getTheEngineSlow();
++#else
+   static HepRandomEngine * getTheEngine();
++#endif
+   // Returns a pointer to the underlying algorithm object.
+ 
+   static void saveEngineStatus( const char filename[] = "Config.conf" );
+@@ -164,5 +171,6 @@
+ }  // namespace CLHEP
+ 
+ #include "CLHEP/Random/Random.icc"
++#include "CLHEP/Random/G4RngFast.h"
+ 
+ #endif
+diff -ruN a/source/externals/clhep/src/Random.cc b/source/externals/clhep/src/Random.cc
+--- a/source/externals/clhep/src/Random.cc	2026-10-01 08:43:14.000000000 +0200
++++ b/source/externals/clhep/src/Random.cc	2026-11-23 01:38:41.214504596 +0100
+@@ -18,6 +18,7 @@
+ // =======================================================================
+ 
+ #include "CLHEP/Random/MixMaxRng.h"
++#include "CLHEP/Random/G4RngSelect.h"
+ #include "CLHEP/Random/Random.h"
+ #include "CLHEP/Random/StaticRandomStates.h"
+ #include "CLHEP/Utility/memory.h"
+@@ -31,30 +32,68 @@
+ #include "CLHEP/Random/SeedTable.h"
+ 
+ #include <assert.h>
++#include <typeinfo>
+ #include <iostream>
+ #include <type_traits>
+ #include <string>
+ 
+ namespace CLHEP {
+ 
++#ifdef G4RNG_FAST
++  // G4RNG fast path (G4RngFast.h): this thread's default engine.
++  __thread HepRandomEngine * g4rng_tls_engine = nullptr;
++  __thread G4RNG_FAST * g4rng_fast_engine = nullptr;
++#endif
++
+   namespace {
+ 
++    // G4RNG: called whenever this thread's default engine changes.
++    inline void g4rngPublish( HepRandomEngine * e ) {
++#ifdef G4RNG_FAST
++      g4rng_tls_engine = e;
++      g4rng_fast_engine = ( e != nullptr && typeid(*e) == typeid(G4RNG_FAST) )
++                          ? static_cast<G4RNG_FAST*>( e ) : nullptr;
++#else
++      (void)e;
++#endif
++    }
++
+     struct defaults {
+ 
+       defaults()
+         : theGenerator( &theDefaultGenerator, do_nothing_deleter() )
+         , theEngine   ( &theDefaultEngine, do_nothing_deleter() )
+-      { }
++      { g4rngInit(); }
++
++      // G4RNG: select this thread's default engine (G4RngSelect.h). Out of
++      // line, so that theDefaults() stays as small as stock's and is still
++      // inlined into HepRandom::getTheEngine(): the drop-in call path must be
++      // the stock one (scripts/verify-host.sh compares the instructions).
++      __attribute__((noinline)) void g4rngInit() {
++        if ( HepRandomEngine* e = G4RngDefaultEngineForThread() ) theEngine.reset( e );
++        G4RngNoteEngine( nullptr, theEngine.get() );
++        g4rngPublish( theEngine.get() );
++      }
+ 
+       defaults(defaults const& other) = delete;
+       defaults const& operator=(defaults const&) = delete;
+ 
+       void  resetEngine( HepRandomEngine * newEngine ) {
++        G4RngNoteEngine( theEngine.get(), newEngine );
+         theEngine.reset( newEngine );
++        g4rngPublish( newEngine );
+       }
+ 
+       void  resetEngine( HepRandomEngine & newEngine ) {
++        G4RngNoteEngine( theEngine.get(), &newEngine );
+         theEngine.reset( &newEngine, do_nothing_deleter() );
++        g4rngPublish( &newEngine );
++      }
++
++      void  resetEngineNoDelete( HepRandomEngine * newEngine ) {
++        G4RngNoteEngine( theEngine.get(), newEngine );
++        theEngine.reset( newEngine, do_nothing_deleter() );
++        g4rngPublish( newEngine );
+       }
+ 
+       bool  ensureInitialized()  {
+@@ -265,14 +304,21 @@
+   return theDefaults().theGenerator.get();
+ }
+ 
++#ifdef G4RNG_FAST
++HepRandomEngine * HepRandom::getTheEngineSlow()
++{
++  return theDefaults().theEngine.get();
++}
++#else
+ HepRandomEngine * HepRandom::getTheEngine()
+ {
+   return theDefaults().theEngine.get();
+ }
++#endif
+ 
+ void HepRandom::setTheEngine (HepRandomEngine* theNewEngine)
+ {
+-  theDefaults().theEngine.reset( theNewEngine, do_nothing_deleter() );
++  theDefaults().resetEngineNoDelete( theNewEngine );
+ }
+ 
+ void HepRandom::saveEngineStatus( const char filename[] )
+diff -ruN a/source/global/HEPRandom/include/Randomize.hh b/source/global/HEPRandom/include/Randomize.hh
+--- a/source/global/HEPRandom/include/Randomize.hh	2026-10-01 08:43:14.000000000 +0200
++++ b/source/global/HEPRandom/include/Randomize.hh	2026-11-23 01:38:33.151570634 +0100
+@@ -49,6 +49,11 @@
+ #define G4RandGeneral CLHEP::RandGeneral
+ #define G4Random CLHEP::HepRandom
+ 
++#ifdef G4RNG_FAST
++// G4RNG fast path (CLHEP/Random/G4RngFast.h): inlined, non-virtual.
++#define G4UniformRand() CLHEP::G4RngFastFlat()
++#else
+ #define G4UniformRand() CLHEP::HepRandom::getTheEngine()->flat()
++#endif
+ 
+ #endif  // randomize_h
+diff -ruN a/source/run/src/G4UserTaskThreadInitialization.cc b/source/run/src/G4UserTaskThreadInitialization.cc
+--- a/source/run/src/G4UserTaskThreadInitialization.cc	2026-10-01 08:43:14.000000000 +0200
++++ b/source/run/src/G4UserTaskThreadInitialization.cc	2026-11-23 01:38:33.152163221 +0100
+@@ -27,6 +27,7 @@
+ #include "G4UserTaskThreadInitialization.hh"
+ 
+ #include "G4AutoLock.hh"
++#include "CLHEP/Random/G4RngSelect.h"
+ #include "G4TaskRunManagerKernel.hh"
+ #include "G4UImanager.hh"
+ #include "G4VUserActionInitialization.hh"
+@@ -73,10 +74,13 @@
+   // A Call to this just forces the creation to defaults
+   G4Random::getTheEngine();
+   // Poor man's solution to check which RNG Engine is used in master thread
+-  CLHEP::HepRandomEngine* retRNG = nullptr;
++  // G4RNG: engines added by the PRNG study clone themselves.
++  CLHEP::HepRandomEngine* retRNG = CLHEP::G4RngNewEngineLike(aNewRNG);
+ 
+   // Need to make these calls thread safe
+-  if (dynamic_cast<const CLHEP::HepJamesRandom*>(aNewRNG) != nullptr)
++  if (retRNG != nullptr) {
++  }
++  else if (dynamic_cast<const CLHEP::HepJamesRandom*>(aNewRNG) != nullptr)
+     retRNG = new CLHEP::HepJamesRandom;
+   else if (dynamic_cast<const CLHEP::MixMaxRng*>(aNewRNG) != nullptr)
+     retRNG = new CLHEP::MixMaxRng;
+diff -ruN a/source/run/src/G4UserWorkerThreadInitialization.cc b/source/run/src/G4UserWorkerThreadInitialization.cc
+--- a/source/run/src/G4UserWorkerThreadInitialization.cc	2026-10-01 08:43:14.000000000 +0200
++++ b/source/run/src/G4UserWorkerThreadInitialization.cc	2026-11-23 01:38:33.152806849 +0100
+@@ -31,6 +31,7 @@
+ #include "G4UserWorkerThreadInitialization.hh"
+ 
+ #include "G4AutoLock.hh"
++#include "CLHEP/Random/G4RngSelect.h"
+ #include "G4MTRunManagerKernel.hh"
+ #include "G4UImanager.hh"
+ #include "G4VUserActionInitialization.hh"
+@@ -82,10 +83,13 @@
+   // A Call to this just forces the creation to defaults
+   G4Random::getTheEngine();
+   // Poor man's solution to check which RNG Engine is used in master thread
+-  CLHEP::HepRandomEngine* retRNG = nullptr;
++  // G4RNG: engines added by the PRNG study clone themselves.
++  CLHEP::HepRandomEngine* retRNG = CLHEP::G4RngNewEngineLike(aNewRNG);
+ 
+   // Need to make these calls thread safe
+-  if (dynamic_cast<const CLHEP::HepJamesRandom*>(aNewRNG) != nullptr) {
++  if (retRNG != nullptr) {
++  }
++  else if (dynamic_cast<const CLHEP::HepJamesRandom*>(aNewRNG) != nullptr) {
+     retRNG = new CLHEP::HepJamesRandom;
+   }
+   else if (dynamic_cast<const CLHEP::MixMaxRng*>(aNewRNG) != nullptr) {

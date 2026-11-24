@@ -1,0 +1,17 @@
+# EM shower: 10 GeV e- in an ATLAS-HEC-like sampling calorimeter (TestEm3 atlashec.mac geometry).
+/control/verbose 0
+/run/verbose 1
+/control/cout/ignoreThreadsExcept 0
+/testem/det/setNbOfLayers 25
+/testem/det/setNbOfAbsor 2
+/testem/det/setAbsor 1 liquidArgon 0.85 cm
+/testem/det/setAbsor 2 Copper 2.5 cm
+/testem/det/setSizeYZ 17 cm
+/testem/phys/addPhysics emstandard_opt0
+/run/setCut 0.7 mm
+/run/initialize
+/gun/particle e-
+/gun/energy 10 GeV
+/random/setSeeds @SEED1@ @SEED2@
+/run/printProgress 0
+/run/beamOn @EVENTS@

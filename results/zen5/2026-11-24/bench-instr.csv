@@ -1,0 +1,15 @@
+host,variant,engine,what,instructions,cycles
+zen5,stock,mixmax,G4UniformRand,57.062,10.560
+zen5,stock,mixmax,getTheEngine_flat,57.062,10.686
+zen5,dropin,mixmax,G4UniformRand,57.063,10.715
+zen5,dropin,mixmax,getTheEngine_flat,57.063,12.090
+zen5,dropin,xoshiro256pp,G4UniformRand,55.000,12.000
+zen5,dropin,xoshiro256pp,getTheEngine_flat,55.000,13.000
+zen5,dropin,mwc192x,G4UniformRand,45.000,12.000
+zen5,dropin,mwc192x,getTheEngine_flat,45.000,9.000
+zen5,fast-mixmax,mixmax,G4UniformRand,40.062,6.323
+zen5,fast-mixmax,mixmax,getTheEngine_flat,44.062,6.582
+zen5,fast-xoshiro256pp,xoshiro256pp,G4UniformRand,34.000,4.961
+zen5,fast-xoshiro256pp,xoshiro256pp,getTheEngine_flat,43.000,6.020
+zen5,fast-mwc192x,mwc192x,G4UniformRand,23.000,3.748
+zen5,fast-mwc192x,mwc192x,getTheEngine_flat,33.000,6.000
