@@ -189,20 +189,26 @@ def report(rows, draws):
     return "\n".join(lines)
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("dir")
+    ap.add_argument("--report-only", action="store_true",
+                    help="rewrite perfstat.md from the recorded runs, running nothing")
     ap.add_argument("--workloads", nargs="+", default=["opnovice2", "testem3"])
     ap.add_argument("--configs", nargs="+", default=CONFIGS)
     ap.add_argument("--reps", type=int, default=4)
     ap.add_argument("--event-scale", type=float, default=None)
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
+    d = Path(args.dir)
+    if args.report_only:
+        rows = list(csv.DictReader(open(d / "perfstat" / "runs.csv")))
+        (d / "perfstat.md").write_text(report(rows, draws_per_event(d)) + "\n")
+        return
     host = run.load_host(run.default_host())
     workloads = run.load_workloads()
     scale = args.event_scale if args.event_scale is not None \
         else run.default_event_scale(host, "st")
-    d = Path(args.dir)
     out = d / "perfstat" / "runs.csv"
     out.parent.mkdir(parents=True, exist_ok=True)
     cpus, others = run.slot_cpus(host, "st", 0, 1)

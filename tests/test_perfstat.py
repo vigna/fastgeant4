@@ -172,3 +172,27 @@ class Screen(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ReportOnly(unittest.TestCase):
+    # scripts/reanalyze.sh rewrites perfstat.md from the recorded runs on a
+    # machine without Geant4: nothing may be run, even if configurations of
+    # the default list are missing.
+    def test_report_only_writes_the_report_without_running(self):
+        with tempfile.TemporaryDirectory() as t:
+            d = Path(t)
+            (d / "perfstat").mkdir()
+            rows = [row("dropin", "mixmax", r, 100, cycles=100000, instructions=50000) for r in range(2)]
+            rows += [row("dropin", "mwc192x", r, 100, cycles=90000, instructions=47000) for r in range(2)]
+            for r in rows:
+                r["real_s"] = "10.0"
+            with open(d / "perfstat" / "runs.csv", "w") as f:
+                f.write(",".join(perfstat.COLUMNS) + "\n")
+                for r in rows:
+                    f.write(",".join(r.get(c, "") for c in perfstat.COLUMNS) + "\n")
+            (d / "counts.csv").write_text("mode,workload,events,flat,flatArray,setSeeds,getTheEngine\n"
+                                          "st,w,10,1000,0,1,1000\n")
+            perfstat.main(["--report-only", str(d)])
+            text = (d / "perfstat.md").read_text()
+            self.assertIn("dropin mwc192x", text)
+            self.assertNotIn("fast-xoshiro256pp", text)

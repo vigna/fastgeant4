@@ -23,6 +23,7 @@ import os
 import re
 import resource
 import subprocess
+import statistics
 import sys
 import tempfile
 import time
@@ -257,9 +258,29 @@ def slot_cpus(host, mode, slot, slots):
     return lists[slot], others
 
 
-def default_event_scale(host, mode):
-    """Per-host scale of the workloads' event counts (EVENT_SCALE_ST/_MT)."""
-    return float(host.get(f"EVENT_SCALE_{mode.upper()}", 1.0))
+def default_event_scale(host, mode, environ=os.environ):
+    """Per-host scale of the workloads' event counts (EVENT_SCALE_ST/_MT): from
+    the environment if set there (scripts/reproduce.sh exports the calibrated
+    scales), else from the host file, else 1."""
+    key = f"EVENT_SCALE_{mode.upper()}"
+    return float(environ.get(key, host.get(key, 1.0)))
+
+
+def calibrated_scale(rows, workloads, mode, target_s):
+    """The event scale at which the median workload of the pilot `rows` (runs
+    of `mode`) takes `target_s` seconds, to two significant digits: for each
+    workload, the scale of its base event count (events_st or events_mt)
+    that the mean time per event of its runs makes last `target_s`."""
+    per_event = {}
+    for r in rows:
+        if r["mode"] == mode:
+            per_event.setdefault(r["workload"], []).append(float(r["real_s"]) / float(r["events"]))
+    scales = sorted(target_s / statistics.fmean(v) / workloads[w][f"events_{mode}"]
+                    for w, v in per_event.items())
+    if not scales:
+        raise ValueError(f"no {mode} runs to calibrate from")
+    m = statistics.median(scales)
+    return float(f"{m:.2g}")
 
 
 def default_host(environ=os.environ):
@@ -602,6 +623,10 @@ def main():
     r.add_argument("--no-warmup", action="store_true")
     c = sub.add_parser("check")
     c.add_argument("csv", nargs="+")
+    k = sub.add_parser("calibrate", help="event scale for a target run time, from pilot runs")
+    k.add_argument("csv", nargs="+")
+    k.add_argument("--mode", choices=["st", "mt"], required=True)
+    k.add_argument("--target", type=float, required=True, help="seconds per run")
     p = sub.add_parser("parse")
     p.add_argument("stdout")
     p.add_argument("stderr", nargs="?")
@@ -610,6 +635,8 @@ def main():
         cmd_run(args)
     elif args.cmd == "check":
         sys.exit(cmd_check(args))
+    elif args.cmd == "calibrate":
+        print(calibrated_scale(read_rows(args.csv), load_workloads(), args.mode, args.target))
     else:
         cmd_parse(args)
 

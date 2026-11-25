@@ -34,6 +34,7 @@ code{font-size:.92em;overflow-wrap:anywhere}
 .top{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:clamp(20px,4vw,56px);align-items:start}
 .deck{font-size:17px;margin-top:16px}
 .scope{font-size:15px;color:var(--mut);margin-top:10px}
+.notice{background:var(--card);border:1px solid var(--rule);padding:10px 14px;font-size:15px;margin:0 0 18px}
 .by{font-size:16px;margin:12px 0 0;font-weight:600}
 .by span{font-weight:400;color:var(--mut)}
 .legend{background:var(--card);border:1px solid var(--line);padding:18px 20px;display:grid;gap:12px}
@@ -89,6 +90,7 @@ details li{font-size:14px}
 <header class="band head">
 <div class="wrap top">
 <div>
+<!--NOTICE-->
 <h1>Replacing MIXMAX speeds up Geant4 by 2–9% on one thread and 3–14% on 96</h1>
 <p class="by">Sebastiano Vigna <span>Università degli Studi di Milano</span></p>
 <p class="deck">Geant4 11.4.3, five workloads, on a 96-core AMD Zen 5 server (clock fixed at 4.5 GHz). With MWC192X called through an inlined, non-virtual path, every workload runs faster than stock; xoshiro256++ follows, up to two points behind (four on testem11 with 96 threads, where its jump costs most). The physics is unchanged: every observable agrees across engines, and the same engine and seed give identical results in every build.</p>
@@ -96,7 +98,7 @@ details li{font-size:14px}
 <nav class="toc"><a href="#sources">Two sources of gain</a><a href="#totals">All engines</a><a href="#cost">Where the time goes</a><a href="#code">Code</a><a href="#checks">Checks and caveats</a></nav>
 </div>
 <aside class="legend" aria-label="Key figures">
-<div class="kf"><b id="k1"></b><span>96 threads: MWC192X on the fast path vs stock, over the five workloads</span></div>
+<div class="kf"><b id="k1"></b><span id="k1l">96 threads: MWC192X on the fast path vs stock, over the five workloads</span></div>
 <div class="kf"><b id="k2"></b><span>one thread, same comparison</span></div>
 <div class="kf"><b id="k3"></b><span>engine swap alone, one thread (drop-in MWC192X vs drop-in MIXMAX, same binary)</span></div>
 <div class="kf"><b id="k4"></b><span>reseeding, done for every event in multithreaded runs: MIXMAX vs MWC192X</span></div>
@@ -206,9 +208,11 @@ const sg=(v,d=1)=>(v>0?"+":v<0?"−":"")+Math.abs(v).toFixed(d);
 const range=(o,e)=>{const v=WL.map(w=>o[w][e][0]);return [Math.min(...v),Math.max(...v)]};
 const r1=range(D.res.mt.total,"mwc192x"),r2=range(D.res.st.total,"mwc192x"),r3=range(D.res.st.dropin,"mwc192x");
 const mix=D.bench.find(b=>b.e==="mixmax"),mwc=D.bench.find(b=>b.e==="mwc192x");
-document.getElementById("k1").textContent=`+${Math.round(r1[0])}–${Math.round(r1[1])}%`;
-document.getElementById("k2").textContent=`+${Math.round(r2[0])}–${Math.round(r2[1])}%`;
-document.getElementById("k3").textContent=`+${r3[0].toFixed(1)}–${r3[1].toFixed(1)}%`;
+const rng=(a,b,d)=>a>=0?`+${a.toFixed(d)}–${b.toFixed(d)}%`:`${sg(a,d)} to ${sg(b,d)}%`;
+document.getElementById("k1").textContent=rng(r1[0],r1[1],0);
+document.getElementById("k1l").textContent=`${D.threads} threads: MWC192X on the fast path vs stock, over the five workloads`;
+document.getElementById("k2").textContent=rng(r2[0],r2[1],0);
+document.getElementById("k3").textContent=rng(r3[0],r3[1],1);
 document.getElementById("k4").textContent=`${(mix.reseed/1000).toFixed(0)} → ${(mwc.reseed/1000).toFixed(1)} µs`;
 
 document.getElementById("keys").innerHTML=ENG.map(e=>`<span><i style="background:var(${COL[e]})"></i>${NAME[e]}${e==="mixmax"?" (fast path only)":""}</span>`).join("")+
@@ -227,7 +231,7 @@ const panel=(mode,title,sub)=>{
     return `<div class="row" tabindex="0" data-tip="${esc(tip)}"><span class="lab">${NAME[e]}</span><span class="trk">${grid}<i class="bar${ns?" hatch":""}" style="left:${a}%;width:${b-a}%;background-color:var(${COL[e]});border-radius:${rad}"></i><b class="ci" style="left:${X(lo)}%;width:${X(hi)-X(lo)}%"></b></span><span class="val">${sg(v)}</span></div>`;
   }).join("")+`</div>`).join("")+`</div>`;
 };
-document.getElementById("chart").innerHTML=panel("st","One thread","22 paired runs")+panel("mt","96 threads","10 paired runs");
+document.getElementById("chart").innerHTML=panel("st","One thread",`${D.res.st.noise.testem3.reps} paired runs`)+panel("mt",`${D.threads} threads`,`${D.res.mt.noise.testem3.reps} paired runs`);
 
 const tip=document.getElementById("tip");
 const show=(el,x,y)=>{tip.textContent=el.dataset.tip;tip.style.display="block";const w=tip.offsetWidth,h=tip.offsetHeight;tip.style.left=Math.max(8,Math.min(innerWidth-w-8,x+12))+"px";tip.style.top=Math.max(8,y-h-10)+"px"};
@@ -242,13 +246,13 @@ const tab=(cap,o,engs,lab=e=>NAME[e])=>`<div class="scroll"><table><caption>${ca
   engs.map(e=>`<tr><td>${lab(e)}</td>${WL.map(w=>cell(o[w][e])).join("")}</tr>`).join("")+`</tbody></table></div>`;
 const NEWE=["mwc192x","xoshiro256pp"];
 const set=(id,h)=>{document.getElementById(id).innerHTML=h};
-set("t-dropin",tab("Engine swap alone, one thread: drop-in engine vs drop-in MIXMAX, %",D.res.st.dropin,NEWE)+tab("Engine swap alone, 96 threads, %",D.res.mt.dropin,NEWE));
-set("t-call",tab("Call path alone, one thread: fast path vs drop-in, same engine, %",D.res.st.callpath,ENG)+tab("Call path alone, 96 threads, %",D.res.mt.callpath,ENG));
+set("t-dropin",tab("Engine swap alone, one thread: drop-in engine vs drop-in MIXMAX, %",D.res.st.dropin,NEWE)+tab(`Engine swap alone, ${D.threads} threads, %`,D.res.mt.dropin,NEWE));
+set("t-call",tab("Call path alone, one thread: fast path vs drop-in, same engine, %",D.res.st.callpath,ENG)+tab(`Call path alone, ${D.threads} threads, %`,D.res.mt.callpath,ENG));
 const fp=e=>NAME[e]+(e==="mixmax"?" (fast path only)":"");
-set("t-total",tab("Fast path vs stock, one thread, %",D.res.st.total,ENG,fp)+tab("Fast path vs stock, 96 threads, %",D.res.mt.total,ENG,fp));
+set("t-total",tab("Fast path vs stock, one thread, %",D.res.st.total,ENG,fp)+tab(`Fast path vs stock, ${D.threads} threads, %`,D.res.mt.total,ENG,fp));
 const nz=(cap,o)=>`<div class="scroll"><table><caption>${cap}</caption><thead><tr><th>Workload</th><th>ms/event</th><th>run CV</th><th>layout band</th><th>stock vs drop-in</th></tr></thead><tbody>`+
   WL.map(w=>{const n=o[w];return `<tr><td>${w}</td><td>${esc(n.ms)}</td><td>${esc(n.cv)}</td><td>${esc(n.band)}</td>${cell(n.stock)}</tr>`}).join("")+`</tbody></table></div>`;
-set("t-noise",nz("Reference and noise, one thread (drop-in MIXMAX)",D.res.st.noise)+nz("Reference and noise, 96 threads (wall time per event)",D.res.mt.noise));
+set("t-noise",nz("Reference and noise, one thread (drop-in MIXMAX)",D.res.st.noise)+nz(`Reference and noise, ${D.threads} threads (wall time per event)`,D.res.mt.noise));
 
 const us=ns=>ns>=1000?`${(ns/1000).toFixed(ns>=10000?1:2)} µs`:`${ns.toFixed(ns<10?1:0)} ns`;
 set("t-bench",`<table><caption>Microbenchmark, one core: reseed and one <code>G4UniformRand()</code> call</caption><thead><tr><th>Engine</th><th>reseed</th><th>ns/call, stock path</th><th>ns/call, fast path</th><th>instructions, stock path</th><th>instructions, fast path</th><th>cycles, stock path</th><th>cycles, fast path</th></tr></thead><tbody>`+

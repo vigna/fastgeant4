@@ -354,3 +354,36 @@ class IdentityCheck(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class EventScale(unittest.TestCase):
+    # scripts/reproduce.sh calibrates the scale for the host and exports it:
+    # the environment overrides the host file, for every script that runs.
+    def test_environment_overrides_the_host_file(self):
+        host = {"EVENT_SCALE_ST": "1.8"}
+        self.assertEqual(run.default_event_scale(host, "st", {"EVENT_SCALE_ST": "2.5"}), 2.5)
+        self.assertEqual(run.default_event_scale(host, "st", {}), 1.8)
+        self.assertEqual(run.default_event_scale({}, "mt", {}), 1.0)
+
+
+class Calibrate(unittest.TestCase):
+    WL = {"a": {"events_st": 100, "events_mt": 10}, "b": {"events_st": 1000, "events_mt": 10},
+          "c": {"events_st": 10, "events_mt": 10}}
+
+    @staticmethod
+    def row(workload, events, real_s, mode="st"):
+        return {"mode": mode, "workload": workload, "events": str(events), "real_s": str(real_s)}
+
+    def test_scale_gives_the_target_time_to_the_median_workload(self):
+        # Seconds per event a: 0.2, b: 0.04, c: 0.2; 60 s needs 300, 1500 and 300
+        # events, i.e. scales 3, 1.5 and 30: the median is 3.
+        rows = [self.row("a", 50, 10.0), self.row("b", 500, 20.0), self.row("c", 5, 1.0)]
+        self.assertEqual(run.calibrated_scale(rows, self.WL, "st", 60.0), 3.0)
+
+    def test_scale_has_two_significant_digits(self):
+        rows = [self.row("a", 100, 33.0)]           # 60 s needs 181.8 events: scale 1.818...
+        self.assertEqual(run.calibrated_scale(rows, self.WL, "st", 60.0), 1.8)
+
+    def test_repetitions_of_a_workload_are_averaged_and_modes_kept_apart(self):
+        rows = [self.row("a", 50, 9.0), self.row("a", 50, 11.0), self.row("a", 50, 99.0, mode="mt")]
+        self.assertEqual(run.calibrated_scale(rows, self.WL, "st", 60.0), 3.0)

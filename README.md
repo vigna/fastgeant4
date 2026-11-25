@@ -46,7 +46,7 @@ about 50 lines.
 | `scripts/` | Build, run, count, benchmark, analyze |
 | `bench/rngbench.cc` | Per-call cost of each call path |
 | `tests/` | Engine known answers, selection, fast path, worker threads, runner and analysis |
-| `hosts/<host>.env` | Host descriptions (paths, CPUs to pin to); `zen5` is the machine of the results, `desktop` an Intel hybrid example |
+| `hosts/<host>.env` | Host descriptions (paths, CPUs to pin to): `TEMPLATE.env` explains them; `zen5` and `zen5-full` are the machine of the results, `desktop` an Intel hybrid example |
 | `results/zen5/2026-11-24/` | Single-thread campaign: 11 parallel single-core slots, 22 paired runs per configuration |
 | `results/zen5-full/2026-11-24/` | 96-thread campaign: 10 paired runs per configuration |
 | `results/zen5/2026-11-23/` | Hardware counters (`perf stat`) per engine |
@@ -57,28 +57,38 @@ physics check (`check.txt`) and the analysis (`summary.md`).
 
 ## Reproducing
 
-On a Linux host with GCC, CMake and `perf`, described by a
-`hosts/<host>.env` file (see `hosts/zen5.env`), with the Geant4 11.4.3
-tarball in `$ROOT/upstream`:
+**The analysis, from the published data** (Python 3 only, a few minutes):
 
 ```sh
-export HOST=zen5
-scripts/setup-host.sh                     # checks tools, unpacks Geant4
-scripts/build-host.sh                     # stock, drop-in, fast paths, layout replicates, examples
-scripts/verify-host.sh                    # known answers, selection, fast path, worker engines, call path
-R=$ROOT/results/$HOST/$(date +%F)
-scripts/bench.sh $R/bench.csv             # time per call of each call path
-scripts/bench-instr.sh $R/bench-instr.csv # instructions and cycles per call
-scripts/count.sh $R                       # draws and reseedings per event
-scripts/interference.sh $R/interference-st st 11 0.5 testem3 b4hadr   # are parallel slots independent?
-scripts/campaign-slots.sh $R st 11 22     # single-thread campaign in 11 slots
-HOST=zen5-full python3 scripts/run.py run --mode mt --variants stock dropin fast-mixmax \
-  fast-xoshiro256pp fast-mwc192x dropin-layout-name dropin-layout-noreorder \
-  --workloads testem3 b4hadr testem11 opnovice2 range --reps 10 --out $ROOT/results/zen5-full/$(date +%F)/runs.csv
-python3 scripts/run.py check $R/runs-st-*.csv   # physics: engines agree; same engine and seed identical across builds
-python3 scripts/analyze.py $R             # writes $R/summary.md
-python3 scripts/perfstat.py $R            # hardware counters per engine: $R/perfstat.md
+scripts/reanalyze.sh
 ```
+
+recomputes every physics check, analysis, hardware-counter report and the
+results page from the raw runs under `results/`, and shows any difference
+from the committed files (there should be none).
+
+**The measurements**, on a Linux host with GCC, CMake, Ninja and `perf`:
+
+```sh
+git clone https://github.com/vigna/fastgeant4.git && cd fastgeant4
+cp hosts/TEMPLATE.env hosts/myhost.env        # set HOST, ROOT, DATA, JOBS, ST_CPUS, MT_CPUS
+cp hosts/TEMPLATE.env hosts/myhost-full.env   # the same, with MT_CPUS = all cores
+HOST=myhost scripts/reproduce.sh
+```
+
+`scripts/reproduce.sh` runs the whole study in stages, each resumable:
+download and check Geant4 11.4.3, build the stock build and the study
+variants with the five workloads, verify them, microbenchmarks, draw counts,
+calibration of the event counts to the host (about 60 s per single-thread
+run and 40 s per multithreaded run), a check that parallel single-thread
+slots do not slow each other, the multithreaded campaign on the whole
+machine, the single-thread campaign (in parallel slots if they do not
+interfere, else sequentially), hardware counters, physics checks and
+analyses, and a results page. Results go to `$ROOT/results/<host>/<date>`
+and `$ROOT/results/<host>-full/<date>`; rerun with the same `RUN=<date>` to
+resume, or name stages to run just those (`scripts/reproduce.sh mt st`). On
+the 96-core machine of the published results it takes about 11 hours, most
+of them in the two campaigns.
 
 Every run is pinned with `taskset`, waits until the host is idle, and is
 rejected unless the process's `G4RNG:` banner names the requested variant

@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 """Builds the results page, docs/index.html, from scripts/site.html.in and
 the campaign data: every number on the page comes from the summary.md
-tables, bench.csv, bench-instr.csv and perfstat.md files under results/.
+tables, bench.csv, bench-instr.csv and perfstat.md files of the campaigns.
 
-Usage: python3 scripts/build_site.py"""
+Usage: python3 scripts/build_site.py [--st DIR] [--mt DIR] [--perf FILE] [--threads N] [--out FILE]
+(defaults: the published campaigns under results/, 96 threads, docs/index.html).
+A page built from other data says so at its top: its text describes the
+published results, its charts and tables the data given."""
 
+import argparse
 import csv
+import html
 import json
 import re
 from pathlib import Path
@@ -86,12 +91,26 @@ def bench(d):
     return out
 
 
-def main():
-    data = {"res": {"st": campaign(ST), "mt": campaign(MT)}, "bench": bench(ST), "perf": {"res": perf(PERF)}}
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--st", type=Path, default=ST, help="single-thread campaign directory")
+    ap.add_argument("--mt", type=Path, default=MT, help="multithreaded campaign directory")
+    ap.add_argument("--perf", type=Path, default=PERF, help="perfstat.md with the hardware counters")
+    ap.add_argument("--threads", type=int, default=96, help="threads of the multithreaded campaign")
+    ap.add_argument("--out", type=Path, default=REPO / "docs/index.html")
+    a = ap.parse_args(argv)
+    data = {"res": {"st": campaign(a.st), "mt": campaign(a.mt)}, "bench": bench(a.st),
+            "perf": {"res": perf(a.perf)}, "threads": a.threads}
+    notice = ""
+    if (a.st.resolve(), a.mt.resolve(), a.perf.resolve(), a.threads) != (ST, MT, PERF, 96):
+        notice = ('<p class="notice">Reproduction: the charts and tables show the runs in '
+                  f"<code>{html.escape(str(a.st))}</code> and <code>{html.escape(str(a.mt))}</code> "
+                  f"({a.threads} threads); the text describes the published results "
+                  '(<a href="https://vigna.github.io/fastgeant4/">vigna.github.io/fastgeant4</a>).</p>')
     tpl = (REPO / "scripts/site.html.in").read_text()
-    out = REPO / "docs/index.html"
-    out.parent.mkdir(exist_ok=True)
-    out.write_text(tpl.replace("/*DATA*/", json.dumps(data, separators=(",", ":"))))
+    out = a.out
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(tpl.replace("/*DATA*/", json.dumps(data, separators=(",", ":"))).replace("<!--NOTICE-->", notice))
     print(out)
 
 
