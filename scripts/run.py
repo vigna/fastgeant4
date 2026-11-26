@@ -303,10 +303,17 @@ def load_workloads():
     return json.loads((REPO / "workloads" / "workloads.json").read_text())
 
 
-def render_macro(wl, events, seed1, seed2, dest):
+def render_macro(wl, events, seed1, seed2, dest, extra=()):
+    """The workload's macro with its placeholders filled in, and the `extra`
+    commands (e.g. a reseeding policy, /run/eventModulo 0 1) just before
+    /run/beamOn."""
     text = (REPO / "workloads" / wl["macro"]).read_text()
     text = text.replace("@EVENTS@", str(events)).replace("@SEED1@", str(seed1)) \
                .replace("@SEED2@", str(seed2))
+    if extra:
+        lines = text.splitlines(keepends=True)
+        i = next(k for k, l in enumerate(lines) if l.lstrip().startswith("/run/beamOn"))
+        text = "".join(lines[:i] + [e + "\n" for e in extra] + lines[i:])
     dest.write_text(text)
 
 
@@ -317,7 +324,7 @@ def build_command(wl, exe, macro, cpus):
 
 
 def run_one(host, mode, name, wl, variant, engine, events, seed1, seed2, logdir, tag,
-            cpus=None, exclude=(), prefix=()):
+            cpus=None, exclude=(), prefix=(), extra=()):
     """Runs one workload; `prefix` goes before the command (scripts/perfstat.py
     puts perf stat there)."""
     root = Path(host["ROOT"])
@@ -337,7 +344,7 @@ def run_one(host, mode, name, wl, variant, engine, events, seed1, seed2, logdir,
     with tempfile.TemporaryDirectory(prefix="g4rng-") as work:
         work = Path(work)
         macro = work / "run.mac"
-        render_macro(wl, events, seed1, seed2, macro)
+        render_macro(wl, events, seed1, seed2, macro, extra)
         cmd = list(prefix) + build_command(wl, str(exe), str(macro), cpus)
         before, ru0, t0 = read_cpu_jiffies(), resource.getrusage(resource.RUSAGE_CHILDREN), \
             time.monotonic()
@@ -408,7 +415,8 @@ def cmd_run(args):
                     engine = next(e for v, e in configs if v == variant)
                     print(f"warm-up {name} {variant}", flush=True)
                     run_one(host, args.mode, name, workloads[name], variant, engine,
-                            workloads[name]["events_warmup"], 1, 1, None, "warmup", cpus, others)
+                            workloads[name]["events_warmup"], 1, 1, None, "warmup", cpus, others,
+                            extra=args.macro_line)
         for rep, name, variant, engine in schedule(args.workloads, configs, args.reps,
                                                    args.slot, args.slots):
             key = (args.mode, name, variant, engine, rep)
@@ -422,7 +430,7 @@ def cmd_run(args):
             tag = f"{args.mode}-{name}-{variant}-{engine}-{rep}"
             t0 = time.time()
             r = run_one(host, args.mode, name, wl, variant, engine, events, s1, s2, logdir, tag,
-                        cpus, others)
+                        cpus, others, extra=args.macro_line)
             row = {"host": args.host, "mode": args.mode, "workload": name, "variant": variant,
                    "engine": engine, "rep": rep, "seed1": s1, "seed2": s2,
                    "events": r["events"], "real_s": r["real_s"], "user_s": r["user_s"],
@@ -621,6 +629,8 @@ def main():
                    help="multiply the workload's event count (for pilots and checks)")
     r.add_argument("--busy-limit", type=float, default=0.5)
     r.add_argument("--no-warmup", action="store_true")
+    r.add_argument("--macro-line", action="append", default=[],
+                   help="a command to run before /run/beamOn (repeatable)")
     c = sub.add_parser("check")
     c.add_argument("csv", nargs="+")
     k = sub.add_parser("calibrate", help="event scale for a target run time, from pilot runs")

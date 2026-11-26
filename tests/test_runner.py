@@ -387,3 +387,26 @@ class Calibrate(unittest.TestCase):
     def test_repetitions_of_a_workload_are_averaged_and_modes_kept_apart(self):
         rows = [self.row("a", 50, 9.0), self.row("a", 50, 11.0), self.row("a", 50, 99.0, mode="mt")]
         self.assertEqual(run.calibrated_scale(rows, self.WL, "st", 60.0), 3.0)
+
+
+class MacroLines(unittest.TestCase):
+    # Extra commands (e.g. /run/eventModulo 0 1, a reseeding policy) go just
+    # before /run/beamOn, where the run's state accepts them.
+    def test_extra_lines_precede_beam_on(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as t:
+            dest = Path(t) / "m.mac"
+            run.render_macro({"macro": "testem11.mac.in"}, 10, 1, 2, dest, ["/run/eventModulo 0 1"])
+            lines = [l.strip() for l in dest.read_text().splitlines()]
+            i = lines.index("/run/eventModulo 0 1")
+            self.assertTrue(lines[i + 1].startswith("/run/beamOn"), lines[i:i + 2])
+            self.assertEqual(sum(l.startswith("/run/beamOn") for l in lines), 1)
+
+    def test_no_extra_lines_leave_the_macro_unchanged(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as t:
+            a, b = Path(t) / "a.mac", Path(t) / "b.mac"
+            run.render_macro({"macro": "testem11.mac.in"}, 10, 1, 2, a)
+            run.render_macro({"macro": "testem11.mac.in"}, 10, 1, 2, b, [])
+            self.assertEqual(a.read_text(), b.read_text())
+            self.assertNotIn("eventModulo", a.read_text())
