@@ -1,0 +1,11 @@
+host,mode,workload,variant,engine,rep,seed1,seed2,events,real_s,user_s,sys_s,busy_cpus,loadavg,foreign_cpus,sibling_busy,steal_cpus,timestamp,observables
+zen5,st,testem3,dropin,count:mixmax,0,1000,557773,134,3.253851,3.25,0.0,0.025,3.79,0.0,0.0,0.0,2026-11-26T06:51:04,"{""n_charged_steps"": 20153.7, ""n_gamma"": 4013.0, ""n_neutral_steps"": 18576.1}"
+zen5,st,b4hadr,dropin,count:mixmax,0,1000,551421,730,3.242601,3.24,0.0,0.0,3.48,0.0,0.0,0.0,2026-11-26T06:51:10,"{""eabs_MeV"": 165.136, ""egap_MeV"": 12.6693, ""labs_mm"": 143.43099999999998}"
+zen5,st,testem11,dropin,count:mixmax,0,1000,813996,19300,3.371841,3.37,0.0,0.0,3.28,0.0,0.0,0.0,2026-11-26T06:51:15,"{""n_steps"": 86.17, ""proj_range_mm"": 177.28000000000003, ""track_len_mm"": 177.45999999999998}"
+zen5,st,opnovice2,dropin,count:mixmax,0,1000,397218,440,3.338966,3.34,0.0,0.0,3.1,0.001,0.0,0.0,2026-11-26T06:51:22,"{""n_cerenkov"": 45.2, ""n_scint"": 3069.6977}"
+zen5,st,range,dropin,count:mixmax,0,1000,121226,5000,3.325354,3.33,0.01,0.0,2.93,0.001,0.0,0.0,2026-11-26T06:51:28,"{""proj_range_mm"": 0.001366, ""track_len_mm"": 0.0027229999999999997}"
+zen5,mt,testem3,dropin,count:mixmax,0,1000,557773,610,2.98212,19.98,0.0,0.0,2.78,0.0,0.0,0.0,2026-11-26T06:51:33,"{""n_charged_steps"": 20136.0, ""n_gamma"": 4021.0, ""n_neutral_steps"": 18566.3}"
+zen5,mt,b4hadr,dropin,count:mixmax,0,1000,551421,3700,3.059345,21.09,0.02,0.0,2.35,0.005,0.0,0.0,2026-11-26T06:51:39,"{""eabs_MeV"": 165.607, ""egap_MeV"": 12.631, ""labs_mm"": 149.061}"
+zen5,mt,testem11,dropin,count:mixmax,0,1000,813996,92000,2.968091,22.05,0.02,0.0,2.16,0.0,0.0,0.0,2026-11-26T06:51:44,"{""n_steps"": 86.18, ""proj_range_mm"": 177.28000000000003, ""track_len_mm"": 177.44}"
+zen5,mt,opnovice2,dropin,count:mixmax,0,1000,397218,2300,7.246961,56.01,0.0,0.0,1.99,0.0,0.0,0.0,2026-11-26T06:51:54,"{""n_cerenkov"": 42.876957, ""n_scint"": 3004.5474}"
+zen5,mt,range,dropin,count:mixmax,0,1000,121226,25000,2.452778,19.26,0.1,0.0,2.27,0.011,0.0,0.0,2026-11-26T06:51:59,"{""proj_range_mm"": 0.001357, ""track_len_mm"": 0.002739}"

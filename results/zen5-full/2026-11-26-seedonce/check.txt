@@ -1,0 +1,286 @@
+mt b4hadr eabs_MeV dropin/mwc192x: 164.731 vs 164.752 t=-0.76 df=15 p=0.46
+mt b4hadr eabs_MeV dropin/xoshiro256pp: 164.742 vs 164.752 t=-0.40 df=16 p=0.7
+mt b4hadr eabs_MeV dropin-layout-name/mixmax: 164.754 vs 164.752 t=+0.10 df=18 p=0.92
+mt b4hadr eabs_MeV dropin-layout-noreorder/mixmax: 164.754 vs 164.752 t=+0.06 df=18 p=0.95
+mt b4hadr eabs_MeV fast-mixmax/mixmax: 164.752 vs 164.752 t=-0.03 df=18 p=0.98
+mt b4hadr eabs_MeV fast-mwc192x/mwc192x: 164.732 vs 164.752 t=-0.72 df=15 p=0.48
+mt b4hadr eabs_MeV fast-xoshiro256pp/xoshiro256pp: 164.743 vs 164.752 t=-0.37 df=16 p=0.72
+mt b4hadr eabs_MeV stock/mixmax: 164.752 vs 164.752 t=-0.00 df=18 p=1
+mt b4hadr egap_MeV dropin/mwc192x: 12.5633 vs 12.5661 t=-1.16 df=17 p=0.26
+mt b4hadr egap_MeV dropin/xoshiro256pp: 12.5615 vs 12.5661 t=-1.56 df=17 p=0.14
+mt b4hadr egap_MeV dropin-layout-name/mixmax: 12.566 vs 12.5661 t=-0.05 df=18 p=0.96
+mt b4hadr egap_MeV dropin-layout-noreorder/mixmax: 12.5661 vs 12.5661 t=-0.00 df=18 p=1
+mt b4hadr egap_MeV fast-mixmax/mixmax: 12.5659 vs 12.5661 t=-0.08 df=18 p=0.94
+mt b4hadr egap_MeV fast-mwc192x/mwc192x: 12.5635 vs 12.5661 t=-1.09 df=17 p=0.29
+mt b4hadr egap_MeV fast-xoshiro256pp/xoshiro256pp: 12.5613 vs 12.5661 t=-1.62 df=17 p=0.12
+mt b4hadr egap_MeV stock/mixmax: 12.566 vs 12.5661 t=-0.03 df=18 p=0.97
+mt b4hadr labs_mm dropin/mwc192x: 146.37 vs 146.356 t=+0.21 df=15 p=0.83
+mt b4hadr labs_mm dropin/xoshiro256pp: 146.345 vs 146.356 t=-0.18 df=17 p=0.86
+mt b4hadr labs_mm dropin-layout-name/mixmax: 146.359 vs 146.356 t=+0.06 df=18 p=0.95
+mt b4hadr labs_mm dropin-layout-noreorder/mixmax: 146.349 vs 146.356 t=-0.14 df=18 p=0.89
+mt b4hadr labs_mm fast-mixmax/mixmax: 146.352 vs 146.356 t=-0.08 df=18 p=0.94
+mt b4hadr labs_mm fast-mwc192x/mwc192x: 146.372 vs 146.356 t=+0.23 df=15 p=0.82
+mt b4hadr labs_mm fast-xoshiro256pp/xoshiro256pp: 146.349 vs 146.356 t=-0.12 df=17 p=0.9
+mt b4hadr labs_mm stock/mixmax: 146.349 vs 146.356 t=-0.14 df=18 p=0.89
+mt opnovice2 n_cerenkov dropin/mwc192x: 43.0222 vs 43.0076 t=+1.52 df=18 p=0.15
+mt opnovice2 n_cerenkov dropin/xoshiro256pp: 43.0036 vs 43.0076 t=-0.40 df=18 p=0.7
+mt opnovice2 n_cerenkov dropin-layout-name/mixmax: 43.0083 vs 43.0076 t=+0.07 df=18 p=0.95
+mt opnovice2 n_cerenkov dropin-layout-noreorder/mixmax: 43.0058 vs 43.0076 t=-0.20 df=18 p=0.85
+mt opnovice2 n_cerenkov fast-mixmax/mixmax: 43.0065 vs 43.0076 t=-0.12 df=18 p=0.91
+mt opnovice2 n_cerenkov fast-mwc192x/mwc192x: 43.0222 vs 43.0076 t=+1.50 df=18 p=0.15
+mt opnovice2 n_cerenkov fast-xoshiro256pp/xoshiro256pp: 43.0043 vs 43.0076 t=-0.32 df=18 p=0.75
+mt opnovice2 n_cerenkov stock/mixmax: 43.0072 vs 43.0076 t=-0.04 df=18 p=0.97
+mt opnovice2 n_scint dropin/mwc192x: 3005.17 vs 3004.16 t=+1.00 df=18 p=0.33
+mt opnovice2 n_scint dropin/xoshiro256pp: 3003.29 vs 3004.16 t=-0.83 df=18 p=0.42
+mt opnovice2 n_scint dropin-layout-name/mixmax: 3004.16 vs 3004.16 t=-0.00 df=18 p=1
+mt opnovice2 n_scint dropin-layout-noreorder/mixmax: 3004 vs 3004.16 t=-0.16 df=18 p=0.87
+mt opnovice2 n_scint fast-mixmax/mixmax: 3004.06 vs 3004.16 t=-0.10 df=18 p=0.92
+mt opnovice2 n_scint fast-mwc192x/mwc192x: 3005.21 vs 3004.16 t=+1.02 df=18 p=0.32
+mt opnovice2 n_scint fast-xoshiro256pp/xoshiro256pp: 3003.34 vs 3004.16 t=-0.76 df=18 p=0.46
+mt opnovice2 n_scint stock/mixmax: 3004.14 vs 3004.16 t=-0.02 df=18 p=0.98
+mt range proj_range_mm dropin/mwc192x: 0.0013619 vs 0.0013618 t=+0.60 df=17 p=0.56
+mt range proj_range_mm dropin/xoshiro256pp: 0.001362 vs 0.0013618 t=+1.00 df=18 p=0.33
+mt range proj_range_mm dropin-layout-name/mixmax: 0.0013618 vs 0.0013618 t=+0.00 df=18 p=1
+mt range proj_range_mm dropin-layout-noreorder/mixmax: 0.0013618 vs 0.0013618 t=+0.00 df=18 p=1
+mt range proj_range_mm fast-mixmax/mixmax: 0.0013618 vs 0.0013618 t=+0.00 df=18 p=1
+mt range proj_range_mm fast-mwc192x/mwc192x: 0.0013619 vs 0.0013618 t=+0.60 df=17 p=0.56
+mt range proj_range_mm fast-xoshiro256pp/xoshiro256pp: 0.001362 vs 0.0013618 t=+1.00 df=18 p=0.33
+mt range proj_range_mm stock/mixmax: 0.0013618 vs 0.0013618 t=+0.00 df=18 p=1
+mt range track_len_mm dropin/mwc192x: 0.0027372 vs 0.0027372 t=+0.00 df=18 p=1
+mt range track_len_mm dropin/xoshiro256pp: 0.0027371 vs 0.0027372 t=-0.60 df=17 p=0.56
+mt range track_len_mm dropin-layout-name/mixmax: 0.0027372 vs 0.0027372 t=+0.00 df=18 p=1
+mt range track_len_mm dropin-layout-noreorder/mixmax: 0.0027372 vs 0.0027372 t=+0.00 df=18 p=1
+mt range track_len_mm fast-mixmax/mixmax: 0.0027372 vs 0.0027372 t=+0.00 df=18 p=1
+mt range track_len_mm fast-mwc192x/mwc192x: 0.0027372 vs 0.0027372 t=+0.00 df=18 p=1
+mt range track_len_mm fast-xoshiro256pp/xoshiro256pp: 0.002737 vs 0.0027372 t=-1.50 df=9 p=0.17
+mt range track_len_mm stock/mixmax: 0.0027372 vs 0.0027372 t=+0.00 df=18 p=1
+mt testem11 n_steps dropin/mwc192x: 86.19 vs 86.19 t=+0.00 df=inf p=1
+mt testem11 n_steps dropin/xoshiro256pp: 86.19 vs 86.19 t=+0.00 df=inf p=1
+mt testem11 n_steps dropin-layout-name/mixmax: 86.19 vs 86.19 t=+0.00 df=inf p=1
+mt testem11 n_steps dropin-layout-noreorder/mixmax: 86.19 vs 86.19 t=+0.00 df=inf p=1
+mt testem11 n_steps fast-mixmax/mixmax: 86.19 vs 86.19 t=+0.00 df=inf p=1
+mt testem11 n_steps fast-mwc192x/mwc192x: 86.19 vs 86.19 t=+0.00 df=inf p=1
+mt testem11 n_steps fast-xoshiro256pp/xoshiro256pp: 86.19 vs 86.19 t=+0.00 df=inf p=1
+mt testem11 n_steps stock/mixmax: 86.19 vs 86.19 t=+0.00 df=inf p=1
+mt testem11 proj_range_mm dropin/mwc192x: 177.28 vs 177.28 t=+0.00 df=inf p=1
+mt testem11 proj_range_mm dropin/xoshiro256pp: 177.28 vs 177.28 t=+0.00 df=inf p=1
+mt testem11 proj_range_mm dropin-layout-name/mixmax: 177.28 vs 177.28 t=+0.00 df=inf p=1
+mt testem11 proj_range_mm dropin-layout-noreorder/mixmax: 177.28 vs 177.28 t=+0.00 df=inf p=1
+mt testem11 proj_range_mm fast-mixmax/mixmax: 177.28 vs 177.28 t=+0.00 df=inf p=1
+mt testem11 proj_range_mm fast-mwc192x/mwc192x: 177.28 vs 177.28 t=+0.00 df=inf p=1
+mt testem11 proj_range_mm fast-xoshiro256pp/xoshiro256pp: 177.28 vs 177.28 t=+0.00 df=inf p=1
+mt testem11 proj_range_mm stock/mixmax: 177.28 vs 177.28 t=+0.00 df=inf p=1
+mt testem11 track_len_mm dropin/mwc192x: 177.45 vs 177.45 t=+0.00 df=inf p=1
+mt testem11 track_len_mm dropin/xoshiro256pp: 177.45 vs 177.45 t=+0.00 df=inf p=1
+mt testem11 track_len_mm dropin-layout-name/mixmax: 177.45 vs 177.45 t=+0.00 df=inf p=1
+mt testem11 track_len_mm dropin-layout-noreorder/mixmax: 177.45 vs 177.45 t=+0.00 df=inf p=1
+mt testem11 track_len_mm fast-mixmax/mixmax: 177.45 vs 177.45 t=+0.00 df=inf p=1
+mt testem11 track_len_mm fast-mwc192x/mwc192x: 177.45 vs 177.45 t=+0.00 df=inf p=1
+mt testem11 track_len_mm fast-xoshiro256pp/xoshiro256pp: 177.45 vs 177.45 t=+0.00 df=inf p=1
+mt testem11 track_len_mm stock/mixmax: 177.45 vs 177.45 t=+0.00 df=inf p=1
+mt testem3 n_charged_steps dropin/mwc192x: 20140.1 vs 20139.8 t=+0.54 df=18 p=0.6
+mt testem3 n_charged_steps dropin/xoshiro256pp: 20140.3 vs 20139.8 t=+1.09 df=18 p=0.29
+mt testem3 n_charged_steps dropin-layout-name/mixmax: 20139.8 vs 20139.8 t=+0.13 df=18 p=0.9
+mt testem3 n_charged_steps dropin-layout-noreorder/mixmax: 20139.8 vs 20139.8 t=+0.08 df=18 p=0.94
+mt testem3 n_charged_steps fast-mixmax/mixmax: 20139.8 vs 20139.8 t=+0.18 df=18 p=0.86
+mt testem3 n_charged_steps fast-mwc192x/mwc192x: 20140 vs 20139.8 t=+0.53 df=18 p=0.6
+mt testem3 n_charged_steps fast-xoshiro256pp/xoshiro256pp: 20140.4 vs 20139.8 t=+1.23 df=18 p=0.23
+mt testem3 n_charged_steps stock/mixmax: 20139.8 vs 20139.8 t=+0.04 df=18 p=0.97
+mt testem3 n_gamma dropin/mwc192x: 4020.8 vs 4020.6 t=+0.95 df=17 p=0.36
+mt testem3 n_gamma dropin/xoshiro256pp: 4020.7 vs 4020.6 t=+0.45 df=18 p=0.66
+mt testem3 n_gamma dropin-layout-name/mixmax: 4020.6 vs 4020.6 t=+0.00 df=18 p=1
+mt testem3 n_gamma dropin-layout-noreorder/mixmax: 4020.6 vs 4020.6 t=+0.00 df=18 p=1
+mt testem3 n_gamma fast-mixmax/mixmax: 4020.6 vs 4020.6 t=+0.00 df=18 p=1
+mt testem3 n_gamma fast-mwc192x/mwc192x: 4020.7 vs 4020.6 t=+0.45 df=18 p=0.66
+mt testem3 n_gamma fast-xoshiro256pp/xoshiro256pp: 4020.7 vs 4020.6 t=+0.45 df=18 p=0.66
+mt testem3 n_gamma stock/mixmax: 4020.6 vs 4020.6 t=+0.00 df=18 p=1
+mt testem3 n_neutral_steps dropin/mwc192x: 18567.2 vs 18566.4 t=+1.44 df=18 p=0.17
+mt testem3 n_neutral_steps dropin/xoshiro256pp: 18567.2 vs 18566.4 t=+1.69 df=17 p=0.11
+mt testem3 n_neutral_steps dropin-layout-name/mixmax: 18566.5 vs 18566.4 t=+0.15 df=18 p=0.88
+mt testem3 n_neutral_steps dropin-layout-noreorder/mixmax: 18566.5 vs 18566.4 t=+0.25 df=18 p=0.81
+mt testem3 n_neutral_steps fast-mixmax/mixmax: 18566.5 vs 18566.4 t=+0.17 df=18 p=0.87
+mt testem3 n_neutral_steps fast-mwc192x/mwc192x: 18567.2 vs 18566.4 t=+1.45 df=18 p=0.16
+mt testem3 n_neutral_steps fast-xoshiro256pp/xoshiro256pp: 18567.2 vs 18566.4 t=+1.71 df=17 p=0.1
+mt testem3 n_neutral_steps stock/mixmax: 18566.5 vs 18566.4 t=+0.14 df=18 p=0.89
+physics: 26 distinct comparisons; flag p < 0.01 / 26 = 0.00038; smallest p 0.11; |t| > 3 in 0 (expected with no real difference: 0.2)
+IDENTITY mt b4hadr mixmax rep 0: dropin-layout-name differs from dropin: eabs_MeV 164.863 vs 164.864, labs_mm 146.47500000000002 vs 146.476  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 0: dropin-layout-noreorder differs from dropin: eabs_MeV 164.863 vs 164.864, egap_MeV 12.5714 vs 12.571, labs_mm 146.459 vs 146.476  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 0: fast-mixmax differs from dropin: eabs_MeV 164.862 vs 164.864, egap_MeV 12.5716 vs 12.571, labs_mm 146.472 vs 146.476  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 0: stock differs from dropin: eabs_MeV 164.854 vs 164.864, egap_MeV 12.5712 vs 12.571, labs_mm 146.461 vs 146.476  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 1: dropin-layout-name differs from dropin: eabs_MeV 164.722 vs 164.712, egap_MeV 12.5725 vs 12.5734, labs_mm 146.308 vs 146.296  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 1: dropin-layout-noreorder differs from dropin: eabs_MeV 164.72 vs 164.712, egap_MeV 12.5729 vs 12.5734, labs_mm 146.30100000000002 vs 146.296  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 1: fast-mixmax differs from dropin: eabs_MeV 164.714 vs 164.712, egap_MeV 12.5732 vs 12.5734, labs_mm 146.307 vs 146.296  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 1: stock differs from dropin: eabs_MeV 164.716 vs 164.712, egap_MeV 12.5722 vs 12.5734, labs_mm 146.302 vs 146.296  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 2: dropin-layout-name differs from dropin: eabs_MeV 164.78 vs 164.792, egap_MeV 12.56 vs 12.5602, labs_mm 146.281 vs 146.293  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 2: dropin-layout-noreorder differs from dropin: eabs_MeV 164.787 vs 164.792, egap_MeV 12.56 vs 12.5602, labs_mm 146.297 vs 146.293  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 2: fast-mixmax differs from dropin: eabs_MeV 164.79 vs 164.792, egap_MeV 12.5595 vs 12.5602, labs_mm 146.294 vs 146.293  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 2: stock differs from dropin: eabs_MeV 164.793 vs 164.792, egap_MeV 12.5603 vs 12.5602, labs_mm 146.286 vs 146.293  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 3: dropin-layout-name differs from dropin: egap_MeV 12.5589 vs 12.5586, labs_mm 146.216 vs 146.22  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 3: dropin-layout-noreorder differs from dropin: eabs_MeV 164.715 vs 164.707, egap_MeV 12.5593 vs 12.5586, labs_mm 146.21 vs 146.22  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 3: fast-mixmax differs from dropin: eabs_MeV 164.697 vs 164.707, egap_MeV 12.559 vs 12.5586, labs_mm 146.193 vs 146.22  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 3: stock differs from dropin: eabs_MeV 164.704 vs 164.707, egap_MeV 12.5598 vs 12.5586, labs_mm 146.186 vs 146.22  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 4: dropin-layout-name differs from dropin: eabs_MeV 164.766 vs 164.765, egap_MeV 12.5673 vs 12.5683, labs_mm 146.428 vs 146.433  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 4: dropin-layout-noreorder differs from dropin: eabs_MeV 164.764 vs 164.765, egap_MeV 12.5671 vs 12.5683, labs_mm 146.402 vs 146.433  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 4: fast-mixmax differs from dropin: eabs_MeV 164.762 vs 164.765, egap_MeV 12.5677 vs 12.5683, labs_mm 146.428 vs 146.433  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 4: stock differs from dropin: egap_MeV 12.5677 vs 12.5683, labs_mm 146.41899999999998 vs 146.433  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 5: dropin-layout-name differs from dropin: eabs_MeV 164.741 vs 164.745, egap_MeV 12.572 vs 12.5725, labs_mm 146.28199999999998 vs 146.291  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 5: dropin-layout-noreorder differs from dropin: eabs_MeV 164.741 vs 164.745, egap_MeV 12.5728 vs 12.5725, labs_mm 146.283 vs 146.291  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 5: fast-mixmax differs from dropin: eabs_MeV 164.741 vs 164.745, egap_MeV 12.5722 vs 12.5725, labs_mm 146.28 vs 146.291  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 5: stock differs from dropin: eabs_MeV 164.738 vs 164.745, egap_MeV 12.5718 vs 12.5725, labs_mm 146.27800000000002 vs 146.291  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 6: dropin-layout-name differs from dropin: eabs_MeV 164.72 vs 164.717, egap_MeV 12.5627 vs 12.5628, labs_mm 146.505 vs 146.495  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 6: dropin-layout-noreorder differs from dropin: egap_MeV 12.563 vs 12.5628, labs_mm 146.485 vs 146.495  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 6: fast-mixmax differs from dropin: eabs_MeV 164.721 vs 164.717, egap_MeV 12.5626 vs 12.5628, labs_mm 146.49200000000002 vs 146.495  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 6: stock differs from dropin: egap_MeV 12.5625 vs 12.5628, labs_mm 146.48 vs 146.495  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 7: dropin-layout-name differs from dropin: eabs_MeV 164.734 vs 164.733, egap_MeV 12.5678 vs 12.5676, labs_mm 146.512 vs 146.505  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 7: dropin-layout-noreorder differs from dropin: eabs_MeV 164.731 vs 164.733, egap_MeV 12.5668 vs 12.5676, labs_mm 146.487 vs 146.505  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 7: fast-mixmax differs from dropin: eabs_MeV 164.737 vs 164.733, egap_MeV 12.5673 vs 12.5676, labs_mm 146.484 vs 146.505  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 7: stock differs from dropin: eabs_MeV 164.737 vs 164.733, egap_MeV 12.5673 vs 12.5676, labs_mm 146.49599999999998 vs 146.505  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 8: dropin-layout-name differs from dropin: eabs_MeV 164.772 vs 164.746, egap_MeV 12.558 vs 12.5571, labs_mm 146.243 vs 146.221  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 8: dropin-layout-noreorder differs from dropin: eabs_MeV 164.755 vs 164.746, labs_mm 146.22899999999998 vs 146.221  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 8: fast-mixmax differs from dropin: eabs_MeV 164.756 vs 164.746, egap_MeV 12.5573 vs 12.5571  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 8: stock differs from dropin: eabs_MeV 164.758 vs 164.746, egap_MeV 12.5573 vs 12.5571, labs_mm 146.239 vs 146.221  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 9: dropin-layout-name differs from dropin: eabs_MeV 164.739 vs 164.742, egap_MeV 12.5694 vs 12.5693, labs_mm 146.34 vs 146.329  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 9: dropin-layout-noreorder differs from dropin: egap_MeV 12.5703 vs 12.5693, labs_mm 146.34 vs 146.329  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 9: fast-mixmax differs from dropin: eabs_MeV 164.737 vs 164.742, egap_MeV 12.5684 vs 12.5693, labs_mm 146.347 vs 146.329  <-- not the same physics
+IDENTITY mt b4hadr mixmax rep 9: stock differs from dropin: eabs_MeV 164.74 vs 164.742, egap_MeV 12.5698 vs 12.5693, labs_mm 146.344 vs 146.329  <-- not the same physics
+IDENTITY mt b4hadr mwc192x rep 0: fast-mwc192x differs from dropin: eabs_MeV 164.633 vs 164.625, egap_MeV 12.5623 vs 12.5628  <-- not the same physics
+IDENTITY mt b4hadr mwc192x rep 1: fast-mwc192x differs from dropin: eabs_MeV 164.739 vs 164.735, egap_MeV 12.5678 vs 12.5675, labs_mm 146.574 vs 146.581  <-- not the same physics
+IDENTITY mt b4hadr mwc192x rep 2: fast-mwc192x differs from dropin: eabs_MeV 164.741 vs 164.748, egap_MeV 12.5647 vs 12.5642, labs_mm 146.402 vs 146.374  <-- not the same physics
+IDENTITY mt b4hadr mwc192x rep 3: fast-mwc192x differs from dropin: eabs_MeV 164.696 vs 164.69, egap_MeV 12.5635 vs 12.5628  <-- not the same physics
+IDENTITY mt b4hadr mwc192x rep 4: fast-mwc192x differs from dropin: eabs_MeV 164.825 vs 164.819, egap_MeV 12.5684 vs 12.5692, labs_mm 146.389 vs 146.402  <-- not the same physics
+IDENTITY mt b4hadr mwc192x rep 5: fast-mwc192x differs from dropin: eabs_MeV 164.829 vs 164.841, egap_MeV 12.562 vs 12.5614, labs_mm 146.418 vs 146.41899999999998  <-- not the same physics
+IDENTITY mt b4hadr mwc192x rep 6: fast-mwc192x differs from dropin: eabs_MeV 164.628 vs 164.626, egap_MeV 12.5518 vs 12.5517, labs_mm 146.311 vs 146.31  <-- not the same physics
+IDENTITY mt b4hadr mwc192x rep 7: fast-mwc192x differs from dropin: eabs_MeV 164.685 vs 164.68, egap_MeV 12.5638 vs 12.5635, labs_mm 146.202 vs 146.203  <-- not the same physics
+IDENTITY mt b4hadr mwc192x rep 8: fast-mwc192x differs from dropin: eabs_MeV 164.728 vs 164.732, egap_MeV 12.5638 vs 12.5645, labs_mm 146.27100000000002 vs 146.285  <-- not the same physics
+IDENTITY mt b4hadr mwc192x rep 9: fast-mwc192x differs from dropin: eabs_MeV 164.818 vs 164.811, egap_MeV 12.5666 vs 12.5654, labs_mm 146.716 vs 146.69299999999998  <-- not the same physics
+IDENTITY mt b4hadr xoshiro256pp rep 0: fast-xoshiro256pp differs from dropin: eabs_MeV 164.709 vs 164.706, egap_MeV 12.5571 vs 12.557  <-- not the same physics
+IDENTITY mt b4hadr xoshiro256pp rep 1: fast-xoshiro256pp differs from dropin: eabs_MeV 164.698 vs 164.704, egap_MeV 12.5621 vs 12.5626, labs_mm 146.314 vs 146.305  <-- not the same physics
+IDENTITY mt b4hadr xoshiro256pp rep 2: fast-xoshiro256pp differs from dropin: eabs_MeV 164.82 vs 164.818, egap_MeV 12.5703 vs 12.5701, labs_mm 146.426 vs 146.433  <-- not the same physics
+IDENTITY mt b4hadr xoshiro256pp rep 3: fast-xoshiro256pp differs from dropin: eabs_MeV 164.754 vs 164.749, egap_MeV 12.558 vs 12.557, labs_mm 146.43800000000002 vs 146.41500000000002  <-- not the same physics
+IDENTITY mt b4hadr xoshiro256pp rep 4: fast-xoshiro256pp differs from dropin: eabs_MeV 164.819 vs 164.821, egap_MeV 12.5538 vs 12.5543, labs_mm 146.461 vs 146.464  <-- not the same physics
+IDENTITY mt b4hadr xoshiro256pp rep 5: fast-xoshiro256pp differs from dropin: eabs_MeV 164.815 vs 164.817, egap_MeV 12.5607 vs 12.5616, labs_mm 146.422 vs 146.429  <-- not the same physics
+IDENTITY mt b4hadr xoshiro256pp rep 6: fast-xoshiro256pp differs from dropin: eabs_MeV 164.669 vs 164.672, labs_mm 146.08700000000002 vs 146.097  <-- not the same physics
+IDENTITY mt b4hadr xoshiro256pp rep 7: fast-xoshiro256pp differs from dropin: eabs_MeV 164.631 vs 164.63, egap_MeV 12.5525 vs 12.5532, labs_mm 146.195 vs 146.188  <-- not the same physics
+IDENTITY mt b4hadr xoshiro256pp rep 8: fast-xoshiro256pp differs from dropin: eabs_MeV 164.753 vs 164.75, egap_MeV 12.5652 vs 12.5653, labs_mm 146.371 vs 146.38  <-- not the same physics
+IDENTITY mt b4hadr xoshiro256pp rep 9: fast-xoshiro256pp differs from dropin: eabs_MeV 164.762 vs 164.755, egap_MeV 12.5752 vs 12.5756, labs_mm 146.567 vs 146.537  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 0: dropin-layout-name differs from dropin: n_cerenkov 42.99282 vs 42.989134, n_scint 3001.8893 vs 3002.1624  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 0: dropin-layout-noreorder differs from dropin: n_cerenkov 42.983245 vs 42.989134, n_scint 3001.5978 vs 3002.1624  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 0: fast-mixmax differs from dropin: n_cerenkov 42.982717 vs 42.989134, n_scint 3001.4789 vs 3002.1624  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 0: stock differs from dropin: n_cerenkov 42.988807 vs 42.989134, n_scint 3002.0459 vs 3002.1624  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 1: dropin-layout-name differs from dropin: n_cerenkov 43.008149 vs 43.008472, n_scint 3003.3718 vs 3003.6313  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 1: dropin-layout-noreorder differs from dropin: n_cerenkov 43.012171 vs 43.008472, n_scint 3003.7604 vs 3003.6313  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 1: fast-mixmax differs from dropin: n_cerenkov 43.006441 vs 43.008472, n_scint 3003.3616 vs 3003.6313  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 1: stock differs from dropin: n_cerenkov 43.007 vs 43.008472, n_scint 3003.4884 vs 3003.6313  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 2: dropin-layout-name differs from dropin: n_cerenkov 42.981037 vs 42.975606, n_scint 3001.8295 vs 3001.5202  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 2: dropin-layout-noreorder differs from dropin: n_cerenkov 42.979783 vs 42.975606, n_scint 3001.7814 vs 3001.5202  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 2: fast-mixmax differs from dropin: n_cerenkov 42.978363 vs 42.975606, n_scint 3001.5606 vs 3001.5202  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 2: stock differs from dropin: n_cerenkov 42.976124 vs 42.975606, n_scint 3001.5779 vs 3001.5202  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 3: dropin-layout-name differs from dropin: n_cerenkov 43.016472 vs 43.019158, n_scint 3003.4334 vs 3003.2133  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 3: dropin-layout-noreorder differs from dropin: n_cerenkov 43.012748 vs 43.019158, n_scint 3003.1135 vs 3003.2133  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 3: fast-mixmax differs from dropin: n_cerenkov 43.017845 vs 43.019158, n_scint 3003.4221 vs 3003.2133  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 3: stock differs from dropin: n_cerenkov 43.018481 vs 43.019158, n_scint 3003.5387 vs 3003.2133  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 4: dropin-layout-name differs from dropin: n_cerenkov 43.015429 vs 43.01655, n_scint 3004.1914 vs 3004.4651  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 4: dropin-layout-noreorder differs from dropin: n_cerenkov 43.015966 vs 43.01655, n_scint 3004.4362 vs 3004.4651  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 4: fast-mixmax differs from dropin: n_cerenkov 43.016963 vs 43.01655, n_scint 3004.1451 vs 3004.4651  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 4: stock differs from dropin: n_cerenkov 43.017919 vs 43.01655, n_scint 3004.4016 vs 3004.4651  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 5: dropin-layout-name differs from dropin: n_cerenkov 43.031391 vs 43.033304, n_scint 3007.2918 vs 3007.5718  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 5: dropin-layout-noreorder differs from dropin: n_cerenkov 43.03232 vs 43.033304, n_scint 3007.5021 vs 3007.5718  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 5: fast-mixmax differs from dropin: n_cerenkov 43.033224 vs 43.033304, n_scint 3007.8034 vs 3007.5718  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 5: stock differs from dropin: n_cerenkov 43.032314 vs 43.033304, n_scint 3007.5251 vs 3007.5718  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 6: dropin-layout-name differs from dropin: n_cerenkov 43.038171 vs 43.038444, n_scint 3007.1185 vs 3006.9682  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 6: dropin-layout-noreorder differs from dropin: n_cerenkov 43.033171 vs 43.038444, n_scint 3006.2206 vs 3006.9682  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 6: fast-mixmax differs from dropin: n_cerenkov 43.034357 vs 43.038444, n_scint 3006.8123 vs 3006.9682  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 6: stock differs from dropin: n_cerenkov 43.040683 vs 43.038444, n_scint 3007.1775 vs 3006.9682  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 7: dropin-layout-name differs from dropin: n_cerenkov 43.008929 vs 43.007661, n_scint 3005.7733 vs 3005.6714  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 7: dropin-layout-noreorder differs from dropin: n_cerenkov 43.011245 vs 43.007661, n_scint 3005.9361 vs 3005.6714  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 7: fast-mixmax differs from dropin: n_cerenkov 43.005329 vs 43.007661, n_scint 3005.3292 vs 3005.6714  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 7: stock differs from dropin: n_cerenkov 43.005879 vs 43.007661, n_scint 3005.5639 vs 3005.6714  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 8: dropin-layout-name differs from dropin: n_cerenkov 42.975497 vs 42.978043, n_scint 3001.1899 vs 3001.2275  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 8: dropin-layout-noreorder differs from dropin: n_cerenkov 42.977519 vs 42.978043, n_scint 3001.0562 vs 3001.2275  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 8: fast-mixmax differs from dropin: n_cerenkov 42.982686 vs 42.978043, n_scint 3001.6693 vs 3001.2275  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 8: stock differs from dropin: n_cerenkov 42.973972 vs 42.978043, n_scint 3000.9791 vs 3001.2275  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 9: dropin-layout-name differs from dropin: n_cerenkov 43.014789 vs 43.009866, n_scint 3005.4756 vs 3005.145  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 9: dropin-layout-noreorder differs from dropin: n_cerenkov 42.999829 vs 43.009866, n_scint 3004.6018 vs 3005.145  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 9: fast-mixmax differs from dropin: n_cerenkov 43.00728 vs 43.009866, n_scint 3004.9749 vs 3005.145  <-- not the same physics
+IDENTITY mt opnovice2 mixmax rep 9: stock differs from dropin: n_cerenkov 43.010792 vs 43.009866, n_scint 3005.0729 vs 3005.145  <-- not the same physics
+IDENTITY mt opnovice2 mwc192x rep 0: fast-mwc192x differs from dropin: n_cerenkov 43.047643 vs 43.046876, n_scint 3008.0125 vs 3007.7741  <-- not the same physics
+IDENTITY mt opnovice2 mwc192x rep 1: fast-mwc192x differs from dropin: n_cerenkov 43.015208 vs 43.016531, n_scint 3004.1963 vs 3004.3215  <-- not the same physics
+IDENTITY mt opnovice2 mwc192x rep 2: fast-mwc192x differs from dropin: n_cerenkov 42.989146 vs 42.990472, n_scint 3002.1589 vs 3002.0342  <-- not the same physics
+IDENTITY mt opnovice2 mwc192x rep 3: fast-mwc192x differs from dropin: n_cerenkov 43.004432 vs 43.003311, n_scint 3004.1255 vs 3004.1211  <-- not the same physics
+IDENTITY mt opnovice2 mwc192x rep 4: fast-mwc192x differs from dropin: n_cerenkov 43.03973 vs 43.040168, n_scint 3005.0028 vs 3005.0715  <-- not the same physics
+IDENTITY mt opnovice2 mwc192x rep 5: fast-mwc192x differs from dropin: n_cerenkov 43.037565 vs 43.040407, n_scint 3006.4821 vs 3006.5213  <-- not the same physics
+IDENTITY mt opnovice2 mwc192x rep 6: fast-mwc192x differs from dropin: n_cerenkov 43.038034 vs 43.031783, n_scint 3008.1383 vs 3007.5091  <-- not the same physics
+IDENTITY mt opnovice2 mwc192x rep 7: fast-mwc192x differs from dropin: n_cerenkov 43.039919 vs 43.036981, n_scint 3007.1085 vs 3007.1569  <-- not the same physics
+IDENTITY mt opnovice2 mwc192x rep 8: fast-mwc192x differs from dropin: n_cerenkov 43.022118 vs 43.028161, n_scint 3006.0535 vs 3006.2156  <-- not the same physics
+IDENTITY mt opnovice2 mwc192x rep 9: fast-mwc192x differs from dropin: n_cerenkov 42.988 vs 42.987581, n_scint 3000.8537 vs 3000.9397  <-- not the same physics
+IDENTITY mt opnovice2 xoshiro256pp rep 0: fast-xoshiro256pp differs from dropin: n_cerenkov 43.018537 vs 43.016398, n_scint 3005.9359 vs 3005.7661  <-- not the same physics
+IDENTITY mt opnovice2 xoshiro256pp rep 1: fast-xoshiro256pp differs from dropin: n_cerenkov 42.96887 vs 42.971612, n_scint 2999.1503 vs 2999.5223  <-- not the same physics
+IDENTITY mt opnovice2 xoshiro256pp rep 2: fast-xoshiro256pp differs from dropin: n_cerenkov 43.006208 vs 43.008668, n_scint 3004.4575 vs 3004.2818  <-- not the same physics
+IDENTITY mt opnovice2 xoshiro256pp rep 3: fast-xoshiro256pp differs from dropin: n_cerenkov 43.03568 vs 43.041301, n_scint 3007.6293 vs 3007.5922  <-- not the same physics
+IDENTITY mt opnovice2 xoshiro256pp rep 4: fast-xoshiro256pp differs from dropin: n_cerenkov 43.025531 vs 43.019171, n_scint 3004.3676 vs 3004.1702  <-- not the same physics
+IDENTITY mt opnovice2 xoshiro256pp rep 5: fast-xoshiro256pp differs from dropin: n_cerenkov 43.013491 vs 43.012671, n_scint 3002.5953 vs 3002.2861  <-- not the same physics
+IDENTITY mt opnovice2 xoshiro256pp rep 6: fast-xoshiro256pp differs from dropin: n_cerenkov 43.011932 vs 43.009453, n_scint 3002.8531 vs 3002.7509  <-- not the same physics
+IDENTITY mt opnovice2 xoshiro256pp rep 7: fast-xoshiro256pp differs from dropin: n_cerenkov 42.994615 vs 42.988307, n_scint 3002.1166 vs 3002.0752  <-- not the same physics
+IDENTITY mt opnovice2 xoshiro256pp rep 8: fast-xoshiro256pp differs from dropin: n_cerenkov 42.958879 vs 42.959919, n_scint 2999.8984 vs 3000.0706  <-- not the same physics
+IDENTITY mt opnovice2 xoshiro256pp rep 9: fast-xoshiro256pp differs from dropin: n_cerenkov 43.009748 vs 43.008643, n_scint 3004.3863 vs 3004.3407  <-- not the same physics
+IDENTITY mt range xoshiro256pp rep 6: fast-xoshiro256pp differs from dropin: track_len_mm 0.0027370000000000003 vs 0.002738  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 0: dropin-layout-name differs from dropin: n_charged_steps 20140.4 vs 20140.2, n_neutral_steps 18566.8 vs 18566.9  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 0: dropin-layout-noreorder differs from dropin: n_charged_steps 20140.0 vs 20140.2, n_neutral_steps 18566.8 vs 18566.9  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 0: fast-mixmax differs from dropin: n_neutral_steps 18566.7 vs 18566.9  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 0: stock differs from dropin: n_charged_steps 20140.5 vs 20140.2, n_neutral_steps 18567.1 vs 18566.9  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 1: dropin-layout-name differs from dropin: n_neutral_steps 18567.4 vs 18567.2  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 1: dropin-layout-noreorder differs from dropin: n_charged_steps 20140.7 vs 20140.6  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 1: fast-mixmax differs from dropin: n_neutral_steps 18567.1 vs 18567.2  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 1: stock differs from dropin: n_charged_steps 20140.5 vs 20140.6  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 2: dropin-layout-noreorder differs from dropin: n_charged_steps 20140.6 vs 20140.4, n_neutral_steps 18567.6 vs 18567.5  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 2: fast-mixmax differs from dropin: n_charged_steps 20140.2 vs 20140.4, n_neutral_steps 18567.4 vs 18567.5  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 2: stock differs from dropin: n_neutral_steps 18567.6 vs 18567.5  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 3: dropin-layout-name differs from dropin: n_charged_steps 20140.6 vs 20140.4, n_neutral_steps 18567.6 vs 18567.7  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 3: dropin-layout-noreorder differs from dropin: n_charged_steps 20140.7 vs 20140.4, n_neutral_steps 18567.9 vs 18567.7  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 3: fast-mixmax differs from dropin: n_charged_steps 20140.7 vs 20140.4, n_neutral_steps 18568.0 vs 18567.7  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 3: stock differs from dropin: n_neutral_steps 18567.8 vs 18567.7  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 4: dropin-layout-name differs from dropin: n_neutral_steps 18565.3 vs 18565.0  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 4: dropin-layout-noreorder differs from dropin: n_charged_steps 20137.9 vs 20137.8, n_neutral_steps 18565.4 vs 18565.0  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 4: fast-mixmax differs from dropin: n_charged_steps 20138.1 vs 20137.8, n_neutral_steps 18565.4 vs 18565.0  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 4: stock differs from dropin: n_neutral_steps 18565.2 vs 18565.0  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 5: dropin-layout-name differs from dropin: n_charged_steps 20138.8 vs 20138.7, n_neutral_steps 18564.6 vs 18564.5  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 5: dropin-layout-noreorder differs from dropin: n_charged_steps 20138.9 vs 20138.7, n_neutral_steps 18564.7 vs 18564.5  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 5: fast-mixmax differs from dropin: n_neutral_steps 18564.7 vs 18564.5  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 5: stock differs from dropin: n_charged_steps 20138.8 vs 20138.7, n_neutral_steps 18564.6 vs 18564.5  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 6: dropin-layout-name differs from dropin: n_charged_steps 20138.7 vs 20138.8, n_neutral_steps 18566.1 vs 18566.0  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 6: dropin-layout-noreorder differs from dropin: n_charged_steps 20138.5 vs 20138.8, n_neutral_steps 18565.9 vs 18566.0  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 6: fast-mixmax differs from dropin: n_charged_steps 20138.7 vs 20138.8  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 6: stock differs from dropin: n_charged_steps 20138.7 vs 20138.8  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 7: dropin-layout-name differs from dropin: n_charged_steps 20140.3 vs 20140.1, n_neutral_steps 18567.1 vs 18566.8  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 7: dropin-layout-noreorder differs from dropin: n_neutral_steps 18567.0 vs 18566.8  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 7: fast-mixmax differs from dropin: n_charged_steps 20140.5 vs 20140.1, n_neutral_steps 18567.2 vs 18566.8  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 7: stock differs from dropin: n_charged_steps 20140.3 vs 20140.1, n_neutral_steps 18567.0 vs 18566.8  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 8: dropin-layout-name differs from dropin: n_charged_steps 20138.8 vs 20139.0, n_neutral_steps 18564.8 vs 18565.0  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 8: dropin-layout-noreorder differs from dropin: n_neutral_steps 18565.1 vs 18565.0  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 8: fast-mixmax differs from dropin: n_charged_steps 20139.1 vs 20139.0, n_neutral_steps 18564.9 vs 18565.0  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 8: stock differs from dropin: n_charged_steps 20138.9 vs 20139.0, n_neutral_steps 18564.6 vs 18565.0  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 9: dropin-layout-name differs from dropin: n_charged_steps 20141.9 vs 20141.6, n_neutral_steps 18567.7 vs 18567.5  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 9: dropin-layout-noreorder differs from dropin: n_neutral_steps 18567.8 vs 18567.5  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 9: fast-mixmax differs from dropin: n_charged_steps 20141.7 vs 20141.6, n_neutral_steps 18567.6 vs 18567.5  <-- not the same physics
+IDENTITY mt testem3 mixmax rep 9: stock differs from dropin: n_charged_steps 20141.5 vs 20141.6, n_neutral_steps 18567.8 vs 18567.5  <-- not the same physics
+IDENTITY mt testem3 mwc192x rep 1: fast-mwc192x differs from dropin: n_charged_steps 20140.4 vs 20140.5, n_neutral_steps 18566.1 vs 18566.3  <-- not the same physics
+IDENTITY mt testem3 mwc192x rep 2: fast-mwc192x differs from dropin: n_charged_steps 20140.1 vs 20140.3, n_neutral_steps 18568.5 vs 18568.6  <-- not the same physics
+IDENTITY mt testem3 mwc192x rep 3: fast-mwc192x differs from dropin: n_neutral_steps 18566.2 vs 18566.1  <-- not the same physics
+IDENTITY mt testem3 mwc192x rep 4: fast-mwc192x differs from dropin: n_charged_steps 20139.6 vs 20139.5, n_neutral_steps 18567.9 vs 18567.6  <-- not the same physics
+IDENTITY mt testem3 mwc192x rep 5: fast-mwc192x differs from dropin: n_charged_steps 20140.8 vs 20140.9, n_neutral_steps 18566.8 vs 18567.0  <-- not the same physics
+IDENTITY mt testem3 mwc192x rep 6: fast-mwc192x differs from dropin: n_charged_steps 20138.6 vs 20138.5, n_gamma 4020.0 vs 4021.0, n_neutral_steps 18567.2 vs 18567.1  <-- not the same physics
+IDENTITY mt testem3 mwc192x rep 7: fast-mwc192x differs from dropin: n_charged_steps 20138.9 vs 20138.8, n_neutral_steps 18566.5 vs 18566.4  <-- not the same physics
+IDENTITY mt testem3 mwc192x rep 8: fast-mwc192x differs from dropin: n_charged_steps 20140.3 vs 20140.2  <-- not the same physics
+IDENTITY mt testem3 mwc192x rep 9: fast-mwc192x differs from dropin: n_charged_steps 20143.1 vs 20143.2  <-- not the same physics
+IDENTITY mt testem3 xoshiro256pp rep 0: fast-xoshiro256pp differs from dropin: n_charged_steps 20138.2 vs 20137.9, n_neutral_steps 18565.8 vs 18565.7  <-- not the same physics
+IDENTITY mt testem3 xoshiro256pp rep 1: fast-xoshiro256pp differs from dropin: n_charged_steps 20140.8 vs 20140.7, n_neutral_steps 18566.8 vs 18566.9  <-- not the same physics
+IDENTITY mt testem3 xoshiro256pp rep 2: fast-xoshiro256pp differs from dropin: n_charged_steps 20141.9 vs 20141.6, n_neutral_steps 18567.1 vs 18566.8  <-- not the same physics
+IDENTITY mt testem3 xoshiro256pp rep 3: fast-xoshiro256pp differs from dropin: n_charged_steps 20141.4 vs 20141.6  <-- not the same physics
+IDENTITY mt testem3 xoshiro256pp rep 4: fast-xoshiro256pp differs from dropin: n_neutral_steps 18566.8 vs 18566.9  <-- not the same physics
+IDENTITY mt testem3 xoshiro256pp rep 5: fast-xoshiro256pp differs from dropin: n_charged_steps 20139.8 vs 20139.7  <-- not the same physics
+IDENTITY mt testem3 xoshiro256pp rep 6: fast-xoshiro256pp differs from dropin: n_charged_steps 20139.2 vs 20139.3  <-- not the same physics
+IDENTITY mt testem3 xoshiro256pp rep 7: fast-xoshiro256pp differs from dropin: n_charged_steps 20140.2 vs 20140.0, n_neutral_steps 18568.1 vs 18567.8  <-- not the same physics
+IDENTITY mt testem3 xoshiro256pp rep 8: fast-xoshiro256pp differs from dropin: n_neutral_steps 18566.6 vs 18566.9  <-- not the same physics
+IDENTITY mt testem3 xoshiro256pp rep 9: fast-xoshiro256pp differs from dropin: n_charged_steps 20141.4 vs 20141.5  <-- not the same physics
+identity: 300 runs compared with the same engine and repetition in another build, 179 differ
+PHYSICS CHECK FAILED

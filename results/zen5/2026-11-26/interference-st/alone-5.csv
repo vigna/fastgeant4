@@ -1,0 +1,5 @@
+host,mode,workload,variant,engine,rep,seed1,seed2,events,real_s,user_s,sys_s,busy_cpus,loadavg,foreign_cpus,sibling_busy,steal_cpus,timestamp,observables
+zen5,st,testem3,dropin,mixmax,5,1005,557773,603,14.498275,14.5,0.0,0.0,0.95,0.002,0.0,0.0,2026-11-26T06:59:39,"{""n_charged_steps"": 20150.5, ""n_gamma"": 4021.0, ""n_neutral_steps"": 18608.7}"
+zen5,st,b4hadr,dropin,mixmax,5,1005,551421,3285,14.759796,14.75,0.01,0.0,0.88,0.0,0.0,0.0,2026-11-26T06:59:57,"{""eabs_MeV"": 164.58, ""egap_MeV"": 12.5971, ""labs_mm"": 144.916}"
+zen5,st,testem3,dropin,mixmax,16,1016,557773,603,14.479259,14.48,0.0,0.0,0.91,0.001,0.0,0.0,2026-11-26T07:00:13,"{""n_charged_steps"": 20157.1, ""n_gamma"": 4023.0, ""n_neutral_steps"": 18603.7}"
+zen5,st,b4hadr,dropin,mixmax,16,1016,551421,3285,14.831772,14.83,0.0,0.0,0.93,0.0,0.0,0.0,2026-11-26T07:00:31,"{""eabs_MeV"": 164.559, ""egap_MeV"": 12.6333, ""labs_mm"": 146.023}"

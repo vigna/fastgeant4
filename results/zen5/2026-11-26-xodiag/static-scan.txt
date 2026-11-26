@@ -1,0 +1,6 @@
+fast-xoshiro256pp  libG4processes_core.so       1036 inlined copies, 13 with vector loads/stores of the state
+fast-xoshiro256pp  libG4processes_hadronic.so   1335 inlined copies, 33 with vector loads/stores of the state
+fast-xoshiro256pp  libG4event.so                42 inlined copies, 1 with vector loads/stores of the state
+fast-mwc192x       libG4processes_core.so       908 inlined copies, 31 with vector loads/stores of the state
+fast-mwc192x       libG4processes_hadronic.so   1121 inlined copies, 52 with vector loads/stores of the state
+fast-mwc192x       libG4event.so                42 inlined copies, 2 with vector loads/stores of the state

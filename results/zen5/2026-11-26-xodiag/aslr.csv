@@ -1,0 +1,17 @@
+variant,aslr,rep,real_s
+fast-xoshiro256pp,off,0,58.627
+fast-xoshiro256pp,on,0,58.644
+dropin,off,0,58.120
+dropin,on,0,58.145
+fast-xoshiro256pp,off,1,58.421
+fast-xoshiro256pp,on,1,59.373
+dropin,off,1,58.399
+dropin,on,1,58.138
+fast-xoshiro256pp,off,2,58.696
+fast-xoshiro256pp,on,2,59.265
+dropin,off,2,57.923
+dropin,on,2,58.556
+fast-xoshiro256pp,off,3,58.535
+fast-xoshiro256pp,on,3,58.857
+dropin,off,3,58.128
+dropin,on,3,57.975

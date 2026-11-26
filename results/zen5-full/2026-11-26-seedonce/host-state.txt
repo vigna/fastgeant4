@@ -1,0 +1,3 @@
+== 2026-11-26T14:15:51Z
+THP enabled: always [madvise] never
+scaling_max_freq:      96 4500000 

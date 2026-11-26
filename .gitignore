@@ -1,3 +1,5 @@
 upstream/
 __pycache__/
 .playwright-mcp/
+results/**/perf-*.data
+results/**/stages/

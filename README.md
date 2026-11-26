@@ -4,10 +4,11 @@
 
 Geant4 11.4.3 uses MIXMAX (CLHEP `MixMaxRng`, N = 17) as its pseudorandom
 number generator. Replacing it with MWC192X, called through an inlined,
-non-virtual path, makes five representative simulations 2–9% faster on one
-thread and 3–14% faster on 96 threads (AMD Zen 5, 96 cores, clock fixed at
-4.5 GHz); xoshiro256++ follows, up to two points behind. Swapping the engine
-alone, with no change to Geant4's call path, gives 1.5–3.6% on one thread,
+non-virtual path, makes five representative simulations 3–9% faster on one
+thread and 3–13% faster on 96 threads (AMD Zen 5, 96 cores, clock fixed at
+4.5 GHz, transparent huge pages madvise); xoshiro256++ follows, one or two
+points behind except on testem11. Swapping the engine alone, with no change
+to Geant4's call path, gives 0.8–3.6% on one thread,
 and more with many threads, because Geant4 reseeds every event and MIXMAX
 takes 23 µs to reseed (MWC192X 0.5 µs, xoshiro256++ 6.6 µs). The physics is
 unchanged: every observable agrees across engines, and the same engine and
@@ -47,13 +48,17 @@ about 50 lines.
 | `bench/rngbench.cc` | Per-call cost of each call path |
 | `tests/` | Engine known answers, selection, fast path, worker threads, runner and analysis |
 | `hosts/<host>.env` | Host descriptions (paths, CPUs to pin to): `TEMPLATE.env` explains them; `zen5` and `zen5-full` are the machine of the results, `desktop` an Intel hybrid example |
-| `results/zen5/2026-11-24/` | Single-thread campaign: 11 parallel single-core slots, 22 paired runs per configuration |
-| `results/zen5-full/2026-11-24/` | 96-thread campaign: 10 paired runs per configuration |
-| `results/zen5/2026-11-23/` | Hardware counters (`perf stat`) per engine |
+| `results/zen5/2026-11-26/` | Single-thread campaign (11 parallel single-core slots, 22 paired runs per configuration), microbenchmarks, draw counts, calibration, interference check, hardware counters (`perf stat`) |
+| `results/zen5-full/2026-11-26/` | 96-thread campaign: 10 paired runs per configuration |
+| `results/zen5-full/2026-11-26-seedonce/` | The 96-thread campaign rerun with each worker seeded once per run (`/run/eventModulo 0 1`); its check reports FAILED by design: the statistical comparison passes, but with that setting runs are no longer identical across builds |
+| `results/zen5/2026-11-26-xodiag/` | Diagnostics of the fast-path xoshiro256++ build on testem11: hardware counters, profiles, address randomization |
+| `results/zen5/2026-11-26-xolayout/` | testem11 with the fast-path xoshiro256++ build relinked in two other function orders |
 
 Each campaign directory holds the raw runs (CSV, one row per run, with the
-physics observables), per-run logs, microbenchmarks, draw counts, the
-physics check (`check.txt`) and the analysis (`summary.md`).
+physics observables), microbenchmarks, draw counts, the host's settings
+(`host-state.txt`), the physics check (`check.txt`) and the analysis
+(`summary.md`); `scripts/reproduce.sh` also writes per-run logs, which the
+repository does not keep.
 
 ## Reproducing
 
@@ -71,7 +76,7 @@ from the committed files (there should be none).
 
 ```sh
 git clone https://github.com/vigna/fastgeant4.git && cd fastgeant4
-cp hosts/TEMPLATE.env hosts/myhost.env        # set HOST, ROOT, DATA, JOBS, ST_CPUS, MT_CPUS
+cp hosts/TEMPLATE.env hosts/myhost.env        # set HOST, ROOT, DATA, JOBS, ST_CPUS, MT_CPUS, THP
 cp hosts/TEMPLATE.env hosts/myhost-full.env   # the same, with MT_CPUS = all cores
 HOST=myhost scripts/reproduce.sh
 ```
@@ -87,7 +92,7 @@ interfere, else sequentially), hardware counters, physics checks and
 analyses, and a results page. Results go to `$ROOT/results/<host>/<date>`
 and `$ROOT/results/<host>-full/<date>`; rerun with the same `RUN=<date>` to
 resume, or name stages to run just those (`scripts/reproduce.sh mt st`). On
-the 96-core machine of the published results it takes about 11 hours, most
+the 96-core machine of the published results it takes about 7.5 hours, most
 of them in the two campaigns.
 
 Every run is pinned with `taskset`, waits until the host is idle, and is

@@ -1,0 +1,10 @@
+== 2026-11-26T06:41:00Z
+THP enabled: always [madvise] never
+THP defrag: always defer defer+madvise [madvise] never
+scaling_governor:      96 performance 
+scaling_min_freq:      96 4500000 
+scaling_max_freq:      96 4500000 
+boost: 1
+intel_pstate no_turbo: 
+cpu0 idle states disabled: 1 1 1 
+vm.max_map_count: 16777216

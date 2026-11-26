@@ -91,11 +91,11 @@ details li{font-size:14px}
 <div class="wrap top">
 <div>
 <!--NOTICE-->
-<h1>Replacing MIXMAX speeds up Geant4 by 2–9% on one thread and 3–14% on 96</h1>
+<h1>Replacing MIXMAX speeds up Geant4 by 3–9% on one thread and 3–13% on 96</h1>
 <p class="by">Sebastiano Vigna <span>Università degli Studi di Milano</span></p>
-<p class="deck">Geant4 11.4.3, five workloads, on a 96-core AMD Zen 5 server (clock fixed at 4.5 GHz). With MWC192X called through an inlined, non-virtual path, every workload runs faster than stock; xoshiro256++ follows, up to two points behind (four on testem11 with 96 threads, where its jump costs most). The physics is unchanged: every observable agrees across engines, and the same engine and seed give identical results in every build.</p>
+<p class="deck">Geant4 11.4.3, five workloads, on a 96-core AMD Zen 5 server (clock fixed at 4.5 GHz, transparent huge pages madvise). With MWC192X called through an inlined, non-virtual path, every workload runs faster than stock; xoshiro256++ follows, one or two points behind except on testem11 (three to six points). The physics is unchanged: every observable agrees across engines, and the same engine and seed give identical results in every build.</p>
 <p class="deck scope">Only generators that produce a number in 1–2 ns and support jumping are considered, so that, as with MIXMAX, distinct seeds give non-overlapping streams: MWC192X and xoshiro256++. The author designed MWC192X and co-designed xoshiro256++.</p>
-<nav class="toc"><a href="#sources">Two sources of gain</a><a href="#totals">All engines</a><a href="#cost">Where the time goes</a><a href="#code">Code</a><a href="#checks">Checks and caveats</a></nav>
+<nav class="toc"><a href="#sources">Two sources of gain</a><a href="#totals">All engines</a><a href="#cost">Where the time goes</a><a href="#reseed">Reseeding less often</a><a href="#code">Code</a><a href="#checks">Checks and caveats</a></nav>
 </div>
 <aside class="legend" aria-label="Key figures">
 <div class="kf"><b id="k1"></b><span id="k1l">96 threads: MWC192X on the fast path vs stock, over the five workloads</span></div>
@@ -119,8 +119,8 @@ details li{font-size:14px}
 <div class="wrap">
 <h2>The gain has two sources, and they add up</h2>
 <div class="cols">
-<p><b>The engine.</b> Swapping the engine behind Geant4's existing call (drop-in, chosen at run time, same binary) saves the generator's own cost: cheaper draws and, in multithreaded runs, a far cheaper reseed. Geant4 reseeds each worker's engine at the start of every event; MIXMAX takes 23 µs to do it on this machine, xoshiro256++ 6.6 µs, MWC192X 0.5 µs. That is why testem11, whose events are short, gains 12% on 96 threads but 2% on one thread, where it reseeds once per run.</p>
-<p><b>The call path.</b> Stock <code>G4UniformRand()</code> calls the out-of-line <code>HepRandom::getTheEngine()</code> through the PLT, then the virtual <code>flat()</code>. The fast path reads a thread-local pointer and calls the engine class chosen at build time directly, inlined. It helps every engine, MIXMAX included: up to 6% on opnovice2, which draws 160 000 numbers per event, nearly all through <code>G4UniformRand()</code>.</p>
+<p><b>The engine.</b> Swapping the engine behind Geant4's existing call (drop-in, chosen at run time, same binary) saves the generator's own cost: cheaper draws and, in multithreaded runs, a far cheaper reseed. Geant4 reseeds each worker's engine at the start of every event; MIXMAX takes 23 µs to do it on this machine, xoshiro256++ 6.6 µs, MWC192X 0.5 µs. That is why testem11, whose events are short, gains 12.5% on 96 threads but 3% on one thread, where it reseeds once per run.</p>
+<p><b>The call path.</b> Stock <code>G4UniformRand()</code> calls the out-of-line <code>HepRandom::getTheEngine()</code> through the PLT, then the virtual <code>flat()</code>. The fast path reads a thread-local pointer and calls the engine class chosen at build time directly, inlined. It helps MIXMAX and MWC192X on every workload, by up to 5.5% on opnovice2, which draws 160 000 numbers per event, nearly all through <code>G4UniformRand()</code>. The one apparent loss, xoshiro256++ on single-thread testem11, is an accident of code placement in that build, not of the call path (see the checks below).</p>
 </div>
 <div class="two" id="t-dropin"></div>
 <div class="two" id="t-call"></div>
@@ -130,7 +130,7 @@ details li{font-size:14px}
 <section class="band" id="totals">
 <div class="wrap">
 <h2>All engines on the fast path, against stock</h2>
-<p>The same numbers as the chart. MIXMAX here is the fast path alone, with the stock engine. MWC192X is fastest on every workload (on b4hadr its interval overlaps xoshiro256++'s). xoshiro256++ follows, and pays for its 6.6 µs jump on testem11's 96-thread runs.</p>
+<p>The same numbers as the chart. MIXMAX here is the fast path alone, with the stock engine. MWC192X is fastest on every workload, in places within the interval of xoshiro256++. xoshiro256++ follows; on testem11 it pays for its 6.6 µs jump with 96 threads, and with one thread its fast-path build is badly laid out for that workload (see the checks below).</p>
 <div class="two" id="t-total"></div>
 <div class="two" id="t-noise"></div>
 </div>
@@ -140,8 +140,8 @@ details li{font-size:14px}
 <div class="wrap">
 <h2>Where the time goes</h2>
 <div class="cols">
-<p>The microbenchmark below times one call in a tight loop on one core. That loop runs at 5–7 instructions per cycle and overlaps successive calls, so its time per call understates what a draw costs inside a simulation. Hardware counters on the real workloads agree with it on the instructions saved, not on the cycles: in situ, drop-in MWC192X saves about 8 cycles per draw over MIXMAX, where the loop shows no saving at all. The measured gains therefore exceed predictions computed from draw counts and the microbenchmark.</p>
-<p>Reseeding is the exception: it is a long, serial computation whose cost the microbenchmark measures faithfully. With 96 threads a testem11 event takes about 264 µs of thread time, so MIXMAX's 23 µs reseed is about 9% of it, which the cheap-seeding engines save almost entirely. Both engines are seeded by jumping, so distinct seeds give non-overlapping streams, as with MIXMAX.</p>
+<p>The microbenchmark below times one call in a tight loop on one core. That loop runs at 5–7 instructions per cycle and overlaps successive calls, so its time per call understates what a draw costs inside a simulation. Hardware counters on the real workloads agree with it on the instructions saved, not on the cycles: in situ, drop-in MWC192X saves 7–9 cycles per draw over MIXMAX, where the loop shows it slower (16 cycles per call against 10.6). The measured gains therefore exceed predictions computed from draw counts and the microbenchmark.</p>
+<p>Reseeding is the exception: it is a long, serial computation whose cost the microbenchmark measures faithfully. With 96 threads a testem11 event takes about 263 µs of thread time, so MIXMAX's 23 µs reseed is about 9% of it, which the cheap-seeding engines save almost entirely. Both engines are seeded by jumping, so distinct seeds give non-overlapping streams, as with MIXMAX.</p>
 </div>
 <div class="scroll" id="t-bench"></div>
 <div id="t-perf" style="margin-top:22px"></div>
@@ -149,6 +149,18 @@ details li{font-size:14px}
 </div>
 </section>
 
+
+<section class="band" id="reseed">
+<div class="wrap">
+<h2>Reseeding less often does not close the gap</h2>
+<div class="cols">
+<p>Geant4 can seed each worker once per run instead of every event (<code>/run/eventModulo 0 1</code>); its documentation notes that this offers better performance for applications with low primary energies and many events, at the price of results reproducible only with the same number of threads. We ran the 96-thread campaign again with that setting. MIXMAX then recovers its reseeding cost: testem11 events get about 10% faster.</p>
+<p>Yet MWC192X on the fast path, reseeding every event as Geant4 does by default, and so reproducible with any number of threads, is still faster than stock MIXMAX seeded once per run, on every workload. MWC192X's own reseeding cost does not show: its times are the same under both policies.</p>
+</div>
+<div class="scroll" id="t-reseed"></div>
+<p class="note">Wall time per event with 96 threads, from the two campaigns (run on the same machine a few hours apart, so the comparison across them is unpaired); each time is the campaign's drop-in MIXMAX time scaled by its paired ratios. Seeded once per run, the engines still agree on the physics (Welch t, smallest p 0.11 over 26 comparisons), but runs are no longer identical across builds, as Geant4 documents.</p>
+</div>
+</section>
 
 <section class="band" id="code">
 <div class="wrap">
@@ -184,15 +196,16 @@ details li{font-size:14px}
 <h2>Checks, and what to keep in mind</h2>
 <ul>
 <li><b>Physics.</b> Each campaign compares every observable of every workload across engines (Welch t, family-wise α = 1% by Bonferroni over the distinct comparisons). All passed; the smallest p was 0.016 (testem3 charged steps, xoshiro256++) against a threshold of 0.00038. The same engine, seed and repetition gave bit-identical observables in every build: 660 runs compared on one thread, 300 on 96 threads.</li>
-<li><b>Code layout.</b> A comparison between two binaries is called significant only if its interval clears the layout band, the spread measured between two relinks of identical code (0.4–2.1% here). The drop-in <code>getTheEngine()</code> hot path is checked to be instruction-identical to stock, with the same 1019 call sites.</li>
-<li><b>Stock vs drop-in MIXMAX</b> should be zero and is, within the band, on four workloads. On opnovice2 stock is 2.1% faster on one thread and 1.0% on 96, just beyond the band. The likely cause is code placement in <code>libG4clhep</code>, the only library that differs on one thread. It makes the opnovice2 figures against stock 1–2 points lower than those against drop-in MIXMAX.</li>
-<li><b>Parallel slots.</b> Eleven single-thread runs side by side slow each other by 0.4–0.5% (interval upper ends below 1.01, spread below 1%), equally for every configuration; the 96-thread runs ran alone.</li>
+<li><b>Code layout.</b> A comparison between two binaries is called significant only if its interval clears the layout band, the spread measured between two relinks of identical code (0.1–1.7% here). The drop-in <code>getTheEngine()</code> hot path is checked to be instruction-identical to stock, with the same 1019 call sites.</li>
+<li><b>Stock vs drop-in MIXMAX</b> should be zero, and is within the band on every workload with 96 threads. With one thread stock is faster on testem11 (1.2%) and opnovice2 (0.6%), just beyond their bands. The hardware counters show why: stock executes exactly the same instructions as drop-in MIXMAX, with fewer instruction-cache misses. It is code placement in <code>libG4clhep</code>, the only library that differs on one thread, and it makes those figures against stock slightly lower than those against drop-in MIXMAX.</li>
+<li><b>Code placement</b> can outweigh small savings. With one thread on testem11, the fast-path xoshiro256++ build is 1.7–1.8% slower than drop-in (in the campaign and in a dedicated rerun), although it executes 7 fewer instructions per draw: its hot code takes about 4 more instruction-cache misses per draw, with the extra time in functions that draw no random numbers, such as <code>G4Transportation::AlongStepDoIt</code>, and the loss varies with address-space randomization. Relinked from the same objects in another function order, the same build is 0.4% and 1.1% faster than drop-in instead (22 paired runs each).</li>
+<li><b>Parallel slots.</b> Eleven single-thread runs side by side slow each other by about 0.1% (interval upper ends below 1.004, spread below 0.5%), equally for every configuration; the 96-thread runs ran alone.</li>
 <li><b>The multithreaded timer</b> includes worker run initialization, the same for every engine, which dilutes the 96-thread ratios slightly.</li>
 </ul>
 </div>
 </section>
 
-<footer class="band foot"><div class="wrap"><p style="max-width:none">Geant4 11.4.3 on a 96-core AMD Zen 5 server (clock fixed at 4.5 GHz, GCC 16.2), November 2026. Code, patches and raw data: <a href="https://github.com/vigna/fastgeant4">github.com/vigna/fastgeant4</a>.</p></div></footer>
+<footer class="band foot"><div class="wrap"><p style="max-width:none">Geant4 11.4.3 on a 96-core AMD Zen 5 server (clock fixed at 4.5 GHz, transparent huge pages madvise, GCC 16.2), November 2026. Code, patches and raw data: <a href="https://github.com/vigna/fastgeant4">github.com/vigna/fastgeant4</a>.</p></div></footer>
 
 <div class="tip" id="tip" role="tooltip"></div>
 <script>
@@ -258,10 +271,14 @@ const us=ns=>ns>=1000?`${(ns/1000).toFixed(ns>=10000?1:2)} µs`:`${ns.toFixed(ns
 set("t-bench",`<table><caption>Microbenchmark, one core: reseed and one <code>G4UniformRand()</code> call</caption><thead><tr><th>Engine</th><th>reseed</th><th>ns/call, stock path</th><th>ns/call, fast path</th><th>instructions, stock path</th><th>instructions, fast path</th><th>cycles, stock path</th><th>cycles, fast path</th></tr></thead><tbody>`+
   D.bench.map(b=>`<tr><td>${NAME[b.e]}</td><td>${us(b.reseed)}</td><td>${b.nsDrop.toFixed(2)}</td><td>${b.nsFast.toFixed(2)}</td><td>${b.insDrop.toFixed(1)}</td><td>${b.insFast.toFixed(1)}</td><td>${b.cycDrop.toFixed(1)}</td><td>${b.cycFast.toFixed(1)}</td></tr>`).join("")+`</tbody></table>`);
 
-const PC=[["dropin mwc192x","drop-in MWC192X"],["dropin xoshiro256pp","drop-in xoshiro256++"],["fast-mixmax mixmax","fast MIXMAX"],["stock mixmax","stock MIXMAX"]];
+const PC=[["dropin mwc192x","drop-in MWC192X"],["dropin xoshiro256pp","drop-in xoshiro256++"],["fast-mwc192x mwc192x","fast MWC192X"],["fast-xoshiro256pp xoshiro256pp","fast xoshiro256++"],["fast-mixmax mixmax","fast MIXMAX"],["stock mixmax","stock MIXMAX"]];
 const pt=(h,lab)=>`<div class="scroll"><table><caption>${lab}: change per draw vs drop-in MIXMAX</caption><thead><tr><th>Configuration</th><th>cycles opn.</th><th>cycles tem3</th><th>instr. opn.</th><th>instr. tem3</th><th>br. miss opn.</th><th>br. miss tem3</th></tr></thead><tbody>`+
   PC.map(([k,n])=>{const a=D.perf[h].opnovice2[k],b=D.perf[h].testem3[k];return `<tr><td>${n}</td><td>${sg(a.cyc,2)}</td><td>${sg(b.cyc,2)}</td><td>${sg(a.ins,1)}</td><td>${sg(b.ins,1)}</td><td>${sg(a.bm,2)}</td><td>${sg(b.bm,2)}</td></tr>`}).join("")+`</tbody></table></div>`;
 set("t-perf",pt("res","Hardware counters in situ"));
+if(D.reseed){const us=x=>(x*1000).toPrecision(4);
+set("t-reseed",`<table><caption>MIXMAX stock vs MWC192X fast path, ${D.threads} threads, µs per event</caption><thead><tr><th>Workload</th><th>MIXMAX, every event</th><th>MIXMAX, once per run</th><th>MWC192X, every event</th><th>MWC192X, once per run</th><th>MWC192X every event vs MIXMAX once</th></tr></thead><tbody>`+
+  WL.map(w=>{const r=D.reseed[w];return `<tr><td>${w}</td><td>${us(r.stockEvery)}</td><td>${us(r.stockOnce)}</td><td>${us(r.mwcEvery)}</td><td>${us(r.mwcOnce)}</td><td>${sg((r.stockOnce/r.mwcEvery-1)*100)}%</td></tr>`}).join("")+`</tbody></table>`);}
+else{const e=document.getElementById("reseed");if(e)e.remove();}
 
 }
 </script>

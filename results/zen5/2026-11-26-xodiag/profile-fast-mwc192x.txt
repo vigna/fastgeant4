@@ -1,0 +1,64 @@
+# real 57.161 s, 347400 events
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 229K of event 'cycles:u'
+# Event count (approx.): 255185552785
+#
+# Overhead  Shared Object               Symbol                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+# ........  ..........................  .............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+#
+    13.55%  libG4processes_core.so      [.] G4UrbanMscModel::SampleCosineTheta
+     9.79%  libstdc++.so.6.0.36         [.] std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::basic_string
+     8.68%  libc.so.6                   [.] __memcmp_evex_movbe
+     5.28%  libG4processes_core.so      [.] G4UniversalFluctuation::SampleGlandz
+     3.91%  libG4processes_core.so      [.] G4VEnergyLossProcess::ComputeLambdaForScaledEnergy
+     3.22%  libG4processes_core.so      [.] G4VEnergyLossProcess::AlongStepGetPhysicalInteractionLength
+     2.83%  libG4tracking.so            [.] G4SteppingManager::DefinePhysicalStepLength
+     2.71%  libG4processes_core.so      [.] G4VMscModel::GetEnergy
+     2.60%  libG4processes_core.so      [.] G4VEnergyLossProcess::PostStepGetPhysicalInteractionLength
+     2.58%  libG4processes_core.so      [.] G4Transportation::AlongStepDoIt
+     2.53%  libG4processes_core.so      [.] G4VEnergyLossProcess::AlongStepDoIt
+     2.44%  libG4processes_core.so      [.] G4UrbanMscModel::ComputeGeomPathLength
+     2.29%  libG4geometry.so            [.] G4Navigator::LocateGlobalPointWithinVolume
+     2.07%  libG4processes_core.so      [.] G4UrbanMscModel::ComputeTruePathLengthLimit
+     1.93%  libG4analysis.so            [.] G4Analysis::GetHnType<tools::histo::h1d>
+     1.64%  libG4track.so               [.] G4ParticleChangeForLoss::UpdateStepForAlongStep
+     1.43%  libG4geometry.so            [.] G4PVReplica::GetReplicationData
+     1.43%  libm.so.6                   [.] sincosf32x
+     1.39%  libG4processes_core.so      [.] G4UrbanMscModel::ComputeTheta0
+     1.34%  libG4geometry.so            [.] G4ReplicaNavigation::ComputeStep
+     1.28%  libG4track.so               [.] G4ParticleChangeForTransport::UpdateStepForPostStep
+     1.27%  libG4processes_core.so      [.] G4BetheBlochModel::SampleSecondaries
+     1.26%  libG4processes_core.so      [.] G4UniversalFluctuation::SampleFluctuations
+     1.15%  libG4geometry.so            [.] G4Box::DistanceToOut
+     1.08%  libG4processes_core.so      [.] G4UrbanMscModel::SampleScattering
+     0.94%  libG4geometry.so            [.] G4PropagatorInField::ClearPropagatorState
+     0.86%  libG4geometry.so            [.] G4VPhysicalVolume::SetTranslation
+     0.84%  libG4clhep.so               [.] CLHEP::Hep3Vector::rotateUz
+     0.81%  libG4tracking.so            [.] G4SteppingManager::InvokeAlongStepDoItProcs
+     0.80%  libG4geometry.so            [.] G4Navigator::ComputeStep
+     0.80%  libG4track.so               [.] G4ParticleChangeForMSC::UpdateStepForAlongStep
+     0.77%  libG4processes_core.so      [.] G4VEnergyLossProcess::PostStepDoIt
+     0.74%  TestEm11                    [.] SteppingAction::UserSteppingAction
+     0.72%  libG4geometry.so            [.] G4SafetyCalculator::SafetyInCurrentVolume
+     0.66%  libG4track.so               [.] G4StepPoint::operator=
+     0.66%  libG4processes_core.so      [.] G4Transportation::AlongStepGetPhysicalInteractionLength
+     0.63%  libG4tracking.so            [.] G4SteppingManager::Stepping
+     0.61%  libc.so.6                   [.] __memmove_avx512_unaligned_erms
+     0.50%  libG4tracking.so            [.] G4SteppingManager::SetInitialStep
+     0.48%  libG4geometry.so            [.] G4Box::DistanceToOut
+     0.48%  libG4clhep.so               [.] CLHEP::RandGaussQ::transformQuick
+     0.46%  libc.so.6                   [.] malloc
+     0.43%  libG4processes_core.so      [.] G4VMscModel::GetDEDX
+     0.38%  libG4processes_core.so      [.] G4UniversalFluctuation::SampleGauss
+     0.36%  libG4analysis.so            [.] G4THnToolsManager<1u, tools::histo::h1d>::Fill
+     0.33%  libG4geometry.so            [.] G4ReplicaNavigation::DistanceToOut
+     0.31%  libG4tracking.so            [.] G4SteppingManager::InvokePSDIP
+
+
+#
+# (Tip: Generate a script for your data: perf script -g <lang>)
+#
