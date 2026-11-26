@@ -1,9 +1,9 @@
 #!/bin/bash
 # Configures, builds and installs one variant into $ROOT/install-<variant>.
-# Usage: scripts/build.sh stock|dropin|dropin-layout-name|dropin-layout-noreorder|fast-<engine>
-# The layout variants reuse src-dropin and only change code layout:
-# dropin-layout-name: -ffunction-sections plus GNU ld --sort-section=name;
-# dropin-layout-noreorder: -fno-reorder-functions (no .text.hot/.unlikely placement).
+# Usage: scripts/build.sh stock|dropin|fast-<engine>|<variant>-layout-name|<variant>-layout-noreorder
+# The layout variants reuse src-<variant> and only change code layout:
+# <variant>-layout-name: -ffunction-sections plus GNU ld --sort-section=name;
+# <variant>-layout-noreorder: -fno-reorder-functions (no .text.hot/.unlikely placement).
 # Run on the build host.
 set -euo pipefail
 repo=$(cd "$(dirname "$0")/.." && pwd)
@@ -12,12 +12,12 @@ variant=${1:?variant}
 cxxflags= ; ldflags=
 case $variant in
   stock) src=$ROOT/upstream/geant4-v11.4.3 ;;
-  dropin-layout-name)
-    src=$ROOT/src-dropin
+  *-layout-name)
+    src=$ROOT/src-${variant%-layout-name}
     cxxflags=-ffunction-sections
     ldflags=-Wl,--sort-section=name ;;
-  dropin-layout-noreorder)
-    src=$ROOT/src-dropin
+  *-layout-noreorder)
+    src=$ROOT/src-${variant%-layout-noreorder}
     cxxflags=-fno-reorder-functions ;;
   *) src=$ROOT/src-$variant ;;
 esac

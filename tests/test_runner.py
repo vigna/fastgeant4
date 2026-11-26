@@ -410,3 +410,17 @@ class MacroLines(unittest.TestCase):
             run.render_macro({"macro": "testem11.mac.in"}, 10, 1, 2, b, [])
             self.assertEqual(a.read_text(), b.read_text())
             self.assertNotIn("eventModulo", a.read_text())
+
+
+class LayoutVariants(unittest.TestCase):
+    # A relink of any build with another function order (<variant>-layout-name,
+    # <variant>-layout-noreorder) runs the same engine as the build itself.
+    def test_fast_path_relink_runs_its_engine(self):
+        self.assertEqual(run.configs_for(["fast-xoshiro256pp-layout-name"], run.ENGINES),
+                         [("fast-xoshiro256pp-layout-name", "xoshiro256pp")])
+        self.assertEqual(run.configs_for(["fast-mwc192x-layout-noreorder"], run.ENGINES),
+                         [("fast-mwc192x-layout-noreorder", "mwc192x")])
+
+    def test_drop_in_relinks_run_mixmax(self):
+        self.assertEqual(run.configs_for(["dropin-layout-name"], run.ENGINES),
+                         [("dropin-layout-name", "mixmax")])

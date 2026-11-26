@@ -231,8 +231,8 @@ def seeds_for(workload, rep):
 def configs_for(variants, engines):
     out = []
     for v in variants:
-        if v.startswith("fast-"):
-            out.append((v, v[len("fast-"):]))
+        if v.startswith("fast-"):  # fast-<engine>, or a relink fast-<engine>-layout-<order>
+            out.append((v, v[len("fast-"):].split("-layout-")[0]))
         elif v.startswith("dropin-layout-") or v == "stock":
             out.append((v, "mixmax"))
         else:
