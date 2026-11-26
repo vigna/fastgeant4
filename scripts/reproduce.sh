@@ -41,6 +41,34 @@ RUN=${RUN:-$(date +%F)}
 R=$ROOT/results/$HOST/$RUN
 F=$ROOT/results/$HOST-full/$RUN
 mkdir -p "$R/stages" "$F"
+
+thp() { sed -n 's/.*\[\(.*\)\].*/\1/p' /sys/kernel/mm/transparent_hugepage/enabled 2>/dev/null; }
+
+state() {  # the settings that affect timings, recorded at every invocation
+  {
+    echo "== $(date -u +%FT%TZ)"
+    echo "THP enabled: $(cat /sys/kernel/mm/transparent_hugepage/enabled 2>/dev/null)"
+    echo "THP defrag: $(cat /sys/kernel/mm/transparent_hugepage/defrag 2>/dev/null)"
+    local f
+    for f in scaling_governor scaling_min_freq scaling_max_freq; do
+      echo "$f: $(cat /sys/devices/system/cpu/cpufreq/policy*/$f 2>/dev/null | sort | uniq -c | tr '\n' ' ')"
+    done
+    echo "boost: $(cat /sys/devices/system/cpu/cpufreq/boost 2>/dev/null)"
+    echo "intel_pstate no_turbo: $(cat /sys/devices/system/cpu/intel_pstate/no_turbo 2>/dev/null)"
+    echo "cpu0 idle states disabled: $(cat /sys/devices/system/cpu/cpu0/cpuidle/state*/disable 2>/dev/null | tr '\n' ' ')"
+    echo "vm.max_map_count: $(cat /proc/sys/vm/max_map_count 2>/dev/null)"
+  } >> "$1"
+}
+
+# The host file may fix the transparent-huge-page mode the study must run
+# with (THP=madvise, as in hosts/zen5.env): a different mode changes the
+# timings, so the run stops instead of producing incomparable numbers.
+if [ -n "${THP:-}" ] && [ "$(thp)" != "$THP" ]; then
+  echo "transparent huge pages are '$(thp)', the host file requires '$THP'"
+  exit 1
+fi
+state "$R/host-state.txt"
+state "$F/host-state.txt"
 STAGES=(setup build verify bench count calibrate interference mt st perfstat analyze site)
 W=(testem3 b4hadr testem11 opnovice2 range)
 V=(stock dropin fast-mixmax fast-xoshiro256pp fast-mwc192x dropin-layout-name dropin-layout-noreorder)
@@ -159,7 +187,7 @@ run_stage() {
   fi
 }
 
-echo "REPRODUCE host=$HOST run=$RUN results=$R"
+echo "REPRODUCE host=$HOST run=$RUN results=$R THP=$(thp)"
 if [ $# -gt 0 ]; then
   for s in "$@"; do
     [[ " ${STAGES[*]} " == *" $s "* ]] || { echo "unknown stage $s (stages: ${STAGES[*]})"; exit 1; }
